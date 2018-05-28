@@ -106,9 +106,18 @@ namespace TestPlugin
                         MySqlCommand cmd = new MySqlCommand(sql, conn);
                         cmd.ExecuteNonQuery();
                     }
-
-                    /// return a message if match
                 }
+
+                /// if username exists, send login is ok
+                ServerString = "Login Result = OK";
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, ServerString } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
             }
         }
 
