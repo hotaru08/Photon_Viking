@@ -96,6 +96,8 @@ namespace TestPlugin
                     sql = "INSERT INTO users (name, password, date_created) VALUES ('" + playerName + "','" + playerPassword + "', now())";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.ExecuteNonQuery();
+
+                    ServerString = "New Account created";
                 }
                 else
                 {
@@ -105,11 +107,17 @@ namespace TestPlugin
                         sql = "UPDATE users SET password='" + playerPassword + "' WHERE name='" + playerName + "'";
                         MySqlCommand cmd = new MySqlCommand(sql, conn);
                         cmd.ExecuteNonQuery();
+
+                        ServerString = "password is updated";
+                    }
+                    else
+                    {
+                        /// if username and password exists, send login is ok
+                        ServerString = "Login Result = OK";
                     }
                 }
 
-                /// if username exists, send login is ok
-                ServerString = "Login Result = OK";
+                
 
                 /// send back message to server
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,

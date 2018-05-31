@@ -23,7 +23,9 @@ public class MainMenuVik : MonoBehaviour
     private string roomName = "myRoom";
     private Vector2 scrollPos = Vector2.zero;
     private string password = "";
-    private bool isLogin = false;
+
+    private bool isLogin = true;
+    //private GameManagerVik manager = new GameManagerVik();
 
     void OnGUI()
     {
@@ -56,19 +58,28 @@ public class MainMenuVik : MonoBehaviour
             PlayerPrefs.SetString("playerPassword", password);
         GUILayout.EndHorizontal();
 
-        // Print message on screen 
-        GUILayout.BeginHorizontal();
-        GUI.color = Color.red;
-        GUILayout.Label("Please Enter your Username and Password");
-        GUILayout.EndHorizontal();
+        //Print login button
+        //GUILayout.Space(5);
+        //GUILayout.BeginHorizontal();
+        //GUILayout.Space(100);
+        //if (GUILayout.Button("Login", GUILayout.Width(120)))
+        //{
+        //    // call function to send msg to server plugin
+        //    manager.Login(); 
 
+
+        //    // receive the message from server
+        //    //PhotonNetwork.OnEventCall += this.OnEventHandler;
+
+        //}
+        //GUILayout.EndHorizontal();
+        
         GUILayout.Space(50);
 
         if (isLogin)
         {
             //Join room by title
             GUILayout.BeginHorizontal();
-            GUI.color = Color.white;
             GUILayout.Label("JOIN ROOM:", GUILayout.Width(150));
             roomName = GUILayout.TextField(roomName);
             if (GUILayout.Button("GO"))
@@ -83,6 +94,9 @@ public class MainMenuVik : MonoBehaviour
             roomName = GUILayout.TextField(roomName);
             if (GUILayout.Button("GO"))
             {
+                // receive the message from server
+                PhotonNetwork.OnEventCall += this.OnEventHandler;
+
                 // using null as TypedLobby parameter will also use the default lobby
                 PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = 10 }, TypedLobby.Default);
             }
@@ -131,7 +145,7 @@ public class MainMenuVik : MonoBehaviour
         GUILayout.EndArea();
     }
 
-
+    /* Loading GUI before main menu */
     void ShowConnectingGUI()
     {
         GUILayout.BeginArea(new Rect((Screen.width - 400) / 2, (Screen.height - 300) / 2, 400, 300));
@@ -142,6 +156,7 @@ public class MainMenuVik : MonoBehaviour
         GUILayout.EndArea();
     }
 
+    /* Call this to change to main menu */
     public void OnConnectedToMaster()
     {
         // this method gets called by PUN, if "Auto Join Lobby" is off.
@@ -149,4 +164,12 @@ public class MainMenuVik : MonoBehaviour
 
         PhotonNetwork.JoinLobby();  // this joins the "default" lobby
     }
+
+    /* Confirm login of user */
+    private void OnEventHandler(byte eventCode, object content, int senderId)
+    {
+        Debug.Log(string.Format("Message from Server: {0}", (string)content));
+    }
 }
+
+     
