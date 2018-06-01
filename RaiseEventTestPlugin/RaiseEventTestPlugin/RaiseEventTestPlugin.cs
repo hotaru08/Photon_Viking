@@ -127,6 +127,54 @@ namespace TestPlugin
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
             }
+
+            else if (info.Request.EvCode == 3)
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerPos = "", playerName = "";
+                bool isPosition = false;
+
+                for (int i = 0; i < playerInfo.Length; ++i)
+                {
+                    if (playerInfo[i] == ',')
+                    {
+                        isPosition = true;
+                        continue;
+                    }
+
+                    /// Set name and password
+                    if (!isPosition)
+                        playerName += playerInfo[i];
+                    else
+                        playerPos += playerInfo[i];
+                }
+
+                /// Check using playerName for existing accounts
+                if (!NameExist(playerName))
+                {
+                    /// Query statement
+                    sql = "INSERT INTO user_position (name, position) VALUES ('" + playerName + "','" + playerPos + "', now())";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+
+                    sql = "UPDATE user_position SET position ='" + playerPos + "' WHERE name='" + playerName + "'";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, ServerString } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+
+            }
         }
 
         /* Linking to SQL */

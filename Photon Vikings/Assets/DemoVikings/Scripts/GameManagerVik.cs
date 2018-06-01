@@ -23,6 +23,14 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null); // send to plugin
     }
 
+    public void DoStorePosition()
+    {
+        byte evCode = 3; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos");
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
 
     IEnumerator OnLeftRoom()
     {
@@ -58,6 +66,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
         if (GUILayout.Button("Leave Room"))
         {
+            string playerPos = transform.position.x + " " + transform.position.y + " " + transform.position.z;
+            PlayerPrefs.SetString("playerPos", playerPos);
+
+            DoStorePosition();
             PhotonNetwork.LeaveRoom();
         }
     }
