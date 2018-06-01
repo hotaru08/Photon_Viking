@@ -90,7 +90,7 @@ namespace TestPlugin
                 }
 
                 /// Check using playerName for existing accounts
-                if (!NameExist(playerName))
+                if (!NameExist(playerName, info.Request.EvCode))
                 {
                     /// Query statement
                     sql = "INSERT INTO users (name, password, date_created) VALUES ('" + playerName + "','" + playerPassword + "', now())";
@@ -150,17 +150,17 @@ namespace TestPlugin
                 }
 
                 /// Check using playerName for existing accounts
-                if (!NameExist(playerName))
+                if (!NameExist(playerName, info.Request.EvCode))
                 {
                     /// Query statement
-                    sql = "INSERT INTO user_position (name, position) VALUES ('" + playerName + "','" + playerPos + "', now())";
+                    sql = "INSERT INTO user_position (name, position) VALUES ('" + playerName + "','" + playerPos + "')";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.ExecuteNonQuery();
                 }
                 else
                 {
 
-                    sql = "UPDATE user_position SET position ='" + playerPos + "' WHERE name='" + playerName + "'";
+                    sql = "UPDATE user_position SET position='" + playerPos + "' WHERE name='" + playerName + "'";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.ExecuteNonQuery();
                 }
@@ -170,7 +170,7 @@ namespace TestPlugin
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
                                                targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, ServerString } },
+                                               data: new Dictionary<byte, object>() { { (byte)245, null } },
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
 
@@ -201,10 +201,19 @@ namespace TestPlugin
         }
 
         /* Checking if Name exists */
-        public bool NameExist(string _playerName)
+        public bool NameExist(string _playerName, int _type)
         {
             /// Query Statement
-            sql = "SELECT name FROM users WHERE name='" + _playerName + "'";
+            switch (_type)
+            {
+                case 2:
+                    sql = "SELECT name FROM users WHERE name='" + _playerName + "'";
+                    break;
+                case 3:
+                    sql = "SELECT name FROM user_position WHERE name='" + _playerName + "'";
+                    break;
+            }
+            
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             object obj = cmd.ExecuteScalar();
 
