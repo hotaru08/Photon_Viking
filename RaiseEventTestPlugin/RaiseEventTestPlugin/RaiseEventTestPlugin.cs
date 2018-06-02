@@ -94,9 +94,6 @@ namespace TestPlugin
                 {
                     /// Query statement
                     sql = "INSERT INTO users (name, password, date_created) VALUES ('" + playerName + "','" + playerPassword + "', now())";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    cmd.ExecuteNonQuery();
-
                     ServerString = "New Account created";
                 }
                 else
@@ -105,9 +102,6 @@ namespace TestPlugin
                     if (!PasswordMatch(playerName, playerPassword))
                     {
                         sql = "UPDATE users SET password='" + playerPassword + "' WHERE name='" + playerName + "'";
-                        MySqlCommand cmd = new MySqlCommand(sql, conn);
-                        cmd.ExecuteNonQuery();
-
                         ServerString = "password is updated";
                     }
                     else
@@ -117,7 +111,8 @@ namespace TestPlugin
                     }
                 }
 
-                
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
 
                 /// send back message to server
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
@@ -154,16 +149,14 @@ namespace TestPlugin
                 {
                     /// Query statement
                     sql = "INSERT INTO user_position (name, position) VALUES ('" + playerName + "','" + playerPos + "')";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    cmd.ExecuteNonQuery();
                 }
                 else
                 {
-
                     sql = "UPDATE user_position SET position='" + playerPos + "' WHERE name='" + playerName + "'";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    cmd.ExecuteNonQuery();
                 }
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
 
 
                 /// send back message to server
