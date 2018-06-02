@@ -94,9 +94,6 @@ public class MainMenuVik : MonoBehaviour
             roomName = GUILayout.TextField(roomName);
             if (GUILayout.Button("GO"))
             {
-                // receive the message from server
-                //PhotonNetwork.OnEventCall += this.OnEventHandler;
-
                 // using null as TypedLobby parameter will also use the default lobby
                 PhotonNetwork.CreateRoom(roomName, new RoomOptions() { MaxPlayers = 10 }, TypedLobby.Default);
             }
@@ -164,13 +161,6 @@ public class MainMenuVik : MonoBehaviour
 
         PhotonNetwork.JoinLobby();  // this joins the "default" lobby
     }
-
-    /* Confirm login of user */
-    //private void OnEventHandler(byte eventCode, object content, int senderId)
-    //{
-    //    if (eventCode == 2)
-    //        Debug.Log(string.Format("Message from Server: {0}", (string)content));
-    //}
 }
 
      
