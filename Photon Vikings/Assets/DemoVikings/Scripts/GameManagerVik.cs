@@ -11,15 +11,13 @@ public class GameManagerVik : Photon.MonoBehaviour {
     private bool m_btimerStart = false;
     private GameObject player;
 
-    private string m_PlayerPosition = null;
+    private static string m_PlayerPosition;
 
     void OnJoinedRoom()
     {
-        StartGame();
-        DoRaiseEvent();
-
-        // receive message from server
         PhotonNetwork.OnEventCall += this.OnEventHandler;
+        DoRaiseEvent();
+        StartGame();
     }
 
     /* Store login info */
@@ -72,6 +70,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         // Spawn our local player
         if (m_PlayerPosition != null)
         {
+            Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
             string[] positions = m_PlayerPosition.Split(' ');
             Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
             player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
@@ -121,14 +120,20 @@ public class GameManagerVik : Photon.MonoBehaviour {
     {
         if (m_btimerStart)
             m_timer += Time.deltaTime;
-
-        Debug.Log(m_timer);
     }
 
     /* Receive data of events from server */
     private void OnEventHandler(byte eventCode, object content, int senderId)
     {
-        if (eventCode == 3)
-            m_PlayerPosition = (string)content;
+        switch(eventCode)
+        {
+            case 2:
+                Debug.Log(string.Format("Message from Server : {0}", (string)content));
+                break;
+            case 3:
+                m_PlayerPosition = (string)content;
+                Debug.Log("position : " + m_PlayerPosition);
+                break;
+        } 
     }
 }
