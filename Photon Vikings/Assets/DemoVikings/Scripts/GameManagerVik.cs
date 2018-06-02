@@ -15,8 +15,12 @@ public class GameManagerVik : Photon.MonoBehaviour {
     {
         StartGame();
         DoRaiseEvent();
+
+        // receive message from server
+        PhotonNetwork.OnEventCall += this.OnEventHandler;
     }
 
+    /* Store login info */
     public void DoRaiseEvent()
     {
         byte evCode = 2;
@@ -26,6 +30,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null); // send to plugin
     }
 
+    /* Store position of player */
     public void DoStorePosition()
     {
         byte evCode = 3; // evCode for saving position
@@ -34,6 +39,9 @@ public class GameManagerVik : Photon.MonoBehaviour {
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
+
+    /* Read name of player */
+
 
     IEnumerator OnLeftRoom()
     {
@@ -106,5 +114,12 @@ public class GameManagerVik : Photon.MonoBehaviour {
             m_timer += Time.deltaTime;
 
         Debug.Log(m_timer);
+    }
+
+    /* Receive data of events from server */
+    private void OnEventHandler(byte eventCode, object content, int senderId)
+    {
+        if (eventCode == 2)
+            Debug.Log(string.Format("Message from Server: {0}", (string)content));
     }
 }
