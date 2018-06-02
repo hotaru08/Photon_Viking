@@ -7,7 +7,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     // this is a object name (must be in any Resources folder) of the prefab to spawn as player avatar.
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
     public string playerPrefabName = "Charprefab";
-    private float m_timer = 0.0f;
+    private float m_timer;
     private bool m_btimerStart = false;
     private GameObject player;
 
@@ -61,8 +61,9 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
         // Spawn our local player
         player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
-        
+
         // start timer
+        m_timer = 0.0f;
         m_btimerStart = true;
     }
 
