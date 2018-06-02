@@ -45,6 +45,16 @@ namespace TestPlugin
 
         public override void OnRaiseEvent(IRaiseEventCallInfo info)
         {
+            try
+            {
+                base.OnRaiseEvent(info);
+            }
+            catch (Exception e)
+            {
+                this.PluginHost.BroadcastErrorInfoEvent(e.ToString(), info);
+                return;
+            }
+
             // Successful Hook
             if (info.Request.EvCode == 1) // simple plugin test
             {
@@ -174,7 +184,7 @@ namespace TestPlugin
         public void ConnectToMySQL()
         {
             // Connect to MySQL
-            connStr = "server=localhost;user=root;database=photon;port=3306;password=<3LiveSIP";
+            connStr = "server=localhost;user=root;database=photon;port=3306;password=marrot4299";
             conn = new MySqlConnection(connStr);
 
             try
