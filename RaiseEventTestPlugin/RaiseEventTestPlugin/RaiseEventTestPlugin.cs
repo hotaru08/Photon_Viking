@@ -173,7 +173,7 @@ namespace TestPlugin
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
                                                targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                               data: new Dictionary<byte, object>() { { (byte)245, playerPos } },
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
 
