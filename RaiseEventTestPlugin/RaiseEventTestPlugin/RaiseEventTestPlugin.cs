@@ -173,10 +173,34 @@ namespace TestPlugin
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
                                                targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, playerPos } },
+                                               data: new Dictionary<byte, object>() { { (byte)245, null } },
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
 
+            }
+
+            else if (info.Request.EvCode == 4)
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerName = playerInfo;
+
+                if (NameExist(playerName, 3))
+                {
+                    /// Query statement
+                    sql = "SELECT position FROM user_position WHERE name='" + playerName + "'";
+                }
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                object position = cmd.ExecuteScalar();
+
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, position } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
             }
         }
 

@@ -17,6 +17,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     {
         PhotonNetwork.OnEventCall += this.OnEventHandler;
         DoRaiseEvent();
+        GetStorePosition();
         StartGame();
     }
 
@@ -35,6 +36,15 @@ public class GameManagerVik : Photon.MonoBehaviour {
     {
         byte evCode = 3; // evCode for saving position
         string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos");
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    public void GetStorePosition()
+    {
+        byte evCode = 4; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -92,7 +102,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         {
             string playerPos = player.transform.position.x + " " + player.transform.position.y + " " + player.transform.position.z;
             PlayerPrefs.SetString("playerPos", playerPos);
-
+            
             DoStorePosition();
             PhotonNetwork.LeaveRoom();
         }
@@ -130,9 +140,14 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 2:
                 Debug.Log(string.Format("Message from Server : {0}", (string)content));
                 break;
-            case 3:
+            //case 3:
+            //    m_PlayerPosition = (string)content;
+            //    Debug.Log("position : " + m_PlayerPosition);
+            //    break;
+            case 4:
                 m_PlayerPosition = (string)content;
                 Debug.Log("position : " + m_PlayerPosition);
+                //StartGame();
                 break;
         } 
     }
