@@ -168,7 +168,8 @@ public class MainMenuVik : MonoBehaviour
     /* Confirm login of user */
     private void OnEventHandler(byte eventCode, object content, int senderId)
     {
-        Debug.Log(string.Format("Message from Server: {0}", (string)content));
+        if (eventCode == 2)
+            Debug.Log(string.Format("Message from Server: {0}", (string)content));
     }
 }
 
