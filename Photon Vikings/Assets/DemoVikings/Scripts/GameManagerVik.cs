@@ -9,6 +9,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     public string playerPrefabName = "Charprefab";
     private float m_timer = 0.0f;
     private bool m_btimerStart = false;
+    private GameObject player;
 
     void OnJoinedRoom()
     {
@@ -59,8 +60,8 @@ public class GameManagerVik : Photon.MonoBehaviour {
         objs[0] = enabledRenderers;
 
         // Spawn our local player
-        PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
-
+        player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
+        
         // start timer
         m_btimerStart = true;
     }
@@ -72,7 +73,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         // Button to leave room
         if (GUILayout.Button("Leave Room"))
         {
-            string playerPos = transform.position.x + " " + transform.position.y + " " + transform.position.z;
+            string playerPos = player.transform.position.x + " " + player.transform.position.y + " " + player.transform.position.z;
             PlayerPrefs.SetString("playerPos", playerPos);
 
             DoStorePosition();
