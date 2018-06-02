@@ -7,6 +7,8 @@ public class GameManagerVik : Photon.MonoBehaviour {
     // this is a object name (must be in any Resources folder) of the prefab to spawn as player avatar.
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
     public string playerPrefabName = "Charprefab";
+    private float m_timer = 0.0f;
+    private bool m_btimerStart = false;
 
     void OnJoinedRoom()
     {
@@ -58,12 +60,16 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
         // Spawn our local player
         PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
+
+        // start timer
+        m_btimerStart = true;
     }
 
     void OnGUI()
     {
         if (PhotonNetwork.room == null) return; //Only display this GUI when inside a room
 
+        // Button to leave room
         if (GUILayout.Button("Leave Room"))
         {
             string playerPos = transform.position.x + " " + transform.position.y + " " + transform.position.z;
@@ -72,10 +78,31 @@ public class GameManagerVik : Photon.MonoBehaviour {
             DoStorePosition();
             PhotonNetwork.LeaveRoom();
         }
+
+        // Broadcast login of player
+        if (m_timer < 5.0f)
+        {
+            GUILayout.BeginHorizontal();
+            GUI.color = Color.yellow;
+            GUILayout.Label(PhotonNetwork.playerName + " has logged in!");
+            GUI.color = Color.white;
+            GUILayout.EndHorizontal();
+
+        }
+        else
+            m_btimerStart = false;
     }
 
     void OnDisconnectedFromPhoton()
     {
         Debug.LogWarning("OnDisconnectedFromPhoton");
-    }    
+    }
+
+    public void Update()
+    {
+        if (m_btimerStart)
+            m_timer += Time.deltaTime;
+
+        Debug.Log(m_timer);
+    }
 }
