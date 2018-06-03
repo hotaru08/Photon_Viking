@@ -17,10 +17,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     void OnJoinedRoom()
     {
-        PhotonNetwork.OnEventCall += this.OnEventHandler;
         DoRaiseEvent();
         GetStorePosition();
-        //StartGame();
+        PhotonNetwork.OnEventCall += this.OnEventHandler;
+        StartGame();
     }
 
     /* Store login info */
@@ -159,7 +159,6 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 4:
                 m_PlayerPosition = (string)content;
                 Debug.Log("position : " + m_PlayerPosition);
-                StartGame();
                 break;
         }
     }
