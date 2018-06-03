@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 
 /// <summary>
@@ -22,11 +23,11 @@ public class ChatVik : Photon.MonoBehaviour
     }
 
     void OnGUI()
-    {        
+    {
         GUI.SetNextControlName("");
 
         GUILayout.BeginArea(new Rect(0, Screen.height - chatHeight, Screen.width, chatHeight));
-        
+
         //Show scroll list of chat messages
         scrollPos = GUILayout.BeginScrollView(scrollPos);
         GUI.color = Color.red;
@@ -38,13 +39,14 @@ public class ChatVik : Photon.MonoBehaviour
         GUI.color = Color.white;
 
         //Chat input
-        GUILayout.BeginHorizontal(); 
+        GUILayout.BeginHorizontal();
         GUI.SetNextControlName("ChatField");
-    chatInput = GUILayout.TextField(chatInput, GUILayout.MinWidth(200));
-       
-        if (Event.current.type == EventType.KeyDown && Event.current.character == '\n'){
+        chatInput = GUILayout.TextField(chatInput, GUILayout.MinWidth(200));
+
+        if (Event.current.type == EventType.KeyDown && Event.current.character == '\n')
+        {
             if (GUI.GetNameOfFocusedControl() == "ChatField")
-            {                
+            {
                 SendChat(PhotonTargets.All);
                 lastUnfocusTime = Time.time;
                 GUI.FocusControl("");
@@ -60,11 +62,11 @@ public class ChatVik : Photon.MonoBehaviour
         }
 
         //if (GUILayout.Button("SEND", GUILayout.Height(17)))
-         //   SendChat(PhotonTargets.All);
+        //   SendChat(PhotonTargets.All);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-    
+
 
         GUILayout.EndArea();
     }
@@ -87,7 +89,20 @@ public class ChatVik : Photon.MonoBehaviour
     {
         if (chatInput != "")
         {
-            photonView.RPC("SendChatMessage", target, chatInput);
+            //photonView.RPC("SendChatMessage", target, chatInput);
+            //chatInput = "";
+            string[] checkCommand = chatInput.Split(' ');
+
+            if (checkCommand[0] == "/Friend")
+            {
+                foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+                {
+                    if (player.GetComponentInChildren<PlayerName>().m_text.text == checkCommand[1])
+                    {
+                        DoAddFriend(checkCommand[1]);
+                    }
+                }
+            }
             chatInput = "";
         }
     }
@@ -114,5 +129,14 @@ public class ChatVik : Photon.MonoBehaviour
     void OnCreatedRoom()
     {
         this.enabled = true;
+    }
+
+    public void DoAddFriend(string FriendName)
+    {
+        byte evCode = 6; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName + "," + FriendName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
 }

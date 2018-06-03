@@ -250,6 +250,27 @@ namespace TestPlugin
                 //                               evCode: info.Request.EvCode,
                 //                               cacheOp: 0);
             }
+
+            else if (info.Request.EvCode == 6)
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string[] store = playerInfo.Split(',');
+                string playerName = store[0];
+                string friendName = store[1];
+
+                sql = "INSERT INTO user_friends (name, friend_name) VALUES ('" + playerName + "','" + friendName + "')";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+            }
         }
 
         /* Linking to SQL */

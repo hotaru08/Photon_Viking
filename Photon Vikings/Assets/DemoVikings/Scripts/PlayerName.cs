@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerName : MonoBehaviour
 {
     [SerializeField]
-    private TextMesh m_text;
+    public TextMesh m_text;
     
     //private static GameObject m_player;
     //public void SetPlayer(GameObject _player)
