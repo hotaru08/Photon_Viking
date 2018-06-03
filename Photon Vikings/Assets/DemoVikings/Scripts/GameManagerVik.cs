@@ -15,7 +15,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     private static string m_PlayerPosition;
     private static string m_PlayerHealth;
-    private bool HasPet = false;
+    private static bool HasPet = false;
 
     void OnJoinedRoom()
     {
