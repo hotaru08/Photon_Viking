@@ -80,7 +80,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         objs[0] = enabledRenderers;
 
         // Spawn our local player
-        if (player == null && pet == null)
+        if (player == null)
         {
             if (m_PlayerPosition != null)
             {

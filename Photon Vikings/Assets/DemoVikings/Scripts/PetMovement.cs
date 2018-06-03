@@ -31,7 +31,7 @@ public class PetMovement : MonoBehaviour {
 
     private float DistanceToPlayer;
     private float minDist = 3;
-    public static GameObject playerToFollow;
+    public GameObject playerToFollow;
 
     public bool Grounded
     // Make our grounded status available for other components
