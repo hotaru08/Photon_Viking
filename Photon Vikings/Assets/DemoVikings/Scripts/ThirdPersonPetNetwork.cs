@@ -74,7 +74,7 @@ public class ThirdPersonPetNetwork : Photon.MonoBehaviour
     void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         //We know there should be instantiation data..get our bools from this PhotonView!
-        object[] objs = photonView.instantiationData; //The instantiate data..
+        //object[] objs = photonView.instantiationData; //The instantiate data..
 
     }
 
