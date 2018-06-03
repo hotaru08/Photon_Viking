@@ -7,9 +7,11 @@ public class GameManagerVik : Photon.MonoBehaviour {
     // this is a object name (must be in any Resources folder) of the prefab to spawn as player avatar.
     // read the documentation for info how to spawn dynamically loaded game objects at runtime (not using Resources folders)
     public string playerPrefabName = "Charprefab";
+    public string petPrefabName = "Pet";
     private float m_timer;
     private bool m_btimerStart = false;
     private static GameObject player;
+    private static GameObject pet;
 
     private static string m_PlayerPosition;
 
@@ -86,9 +88,15 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 string[] positions = m_PlayerPosition.Split(' ');
                 Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
                 player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
+                pet = PhotonNetwork.Instantiate(this.petPrefabName, positionForPlayer + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
+                pet.GetComponent<PetMovement>().playerToFollow = player;
             }
             else
+            {
                 player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
+                pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3 (0,0, -1), Quaternion.identity,0, objs);
+                pet.GetComponent<PetMovement>().playerToFollow = player;
+            }
         }
         // start timer
         m_timer = 0.0f;
