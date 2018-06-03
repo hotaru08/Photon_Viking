@@ -157,7 +157,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
             //    Debug.Log("position : " + m_PlayerPosition);
             //    break;
             case 4:
-                if (player.GetComponent<PhotonView>().isMine)
+                if (PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
                 {
                     m_PlayerPosition = (string)content;
                     Debug.Log("position : " + m_PlayerPosition);
