@@ -31,7 +31,7 @@ public class PetMovement : MonoBehaviour {
 
     private float DistanceToPlayer;
     private float minDist = 3;
-    public GameObject playerToFollow;
+    public static GameObject playerToFollow;
 
     public bool Grounded
     // Make our grounded status available for other components
@@ -85,4 +85,9 @@ public class PetMovement : MonoBehaviour {
             target.AddForce(movement.normalized * speed, ForceMode.VelocityChange);
         }
 	}
+
+    public void SetPlayer(GameObject player)
+    {
+        playerToFollow = player;
+    }
 }
