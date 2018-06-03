@@ -139,9 +139,9 @@ public class GameManagerVik : Photon.MonoBehaviour {
     {
         switch(eventCode)
         {
-            case 2:
-                Debug.Log(string.Format("Message from Server : {0}", (string)content));
-                break;
+            //case 2:
+            //    Debug.Log(string.Format("Message from Server : {0}", (string)content));
+            //    break;
             //case 3:
             //    m_PlayerPosition = (string)content;
             //    Debug.Log("position : " + m_PlayerPosition);
