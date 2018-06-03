@@ -14,11 +14,13 @@ public class GameManagerVik : Photon.MonoBehaviour {
     private static GameObject pet;
 
     private static string m_PlayerPosition;
+    private static string m_PlayerHealth;
 
     void OnJoinedRoom()
     {
         DoRaiseEvent();
         GetStorePosition();
+        GetStoreHealth();
         PhotonNetwork.OnEventCall += this.OnEventHandler;
         StartGame();
     }
@@ -33,11 +35,11 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null); // send to plugin
     }
 
-    /* Store position of player */
+    /* Store position and health of player */
     public void DoStorePosition()
     {
         byte evCode = 3; // evCode for saving position
-        string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos");
+        string contentMessage = PhotonNetwork.playerName + " " + PlayerPrefs.GetString("playerPos") + " " + PlayerPrefs.GetString("playerHealth");
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -52,8 +54,24 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
 
-    /* Read name of player */
+    //public void DoStoreHealth()
+    //{
+    //    byte evCode = 5;
+    //    string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerHealth");
+    //    byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+    //    bool reliable = true;
+    //    PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    //}
 
+    /* Get health of player */
+    public void GetStoreHealth()
+    {
+        byte evCode = 5;
+        string contentMessage = PhotonNetwork.playerName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
 
     IEnumerator OnLeftRoom()
     {
@@ -84,13 +102,16 @@ public class GameManagerVik : Photon.MonoBehaviour {
         {
             if (m_PlayerPosition != null)
             {
-                Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
+                //Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
                 string[] positions = m_PlayerPosition.Split(' ');
                 Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
                 player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
                 //pet = PhotonNetwork.Instantiate(this.petPrefabName, positionForPlayer + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
                 //if(player.GetComponent<PhotonView>().isMine)
                 //    pet.GetComponent<PetMovement>().SetPlayer(player);
+
+                // health, read from server
+                player.GetComponentInChildren<Health>().PlayerHealth = int.Parse(m_PlayerHealth);
             }
             else
             {
@@ -98,6 +119,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 //pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3 (0,0, -1), Quaternion.identity,0, objs);
                 //if (player.GetComponent<PhotonView>().isMine)
                 //    pet.GetComponent<PetMovement>().SetPlayer(player);
+
+                // set health
+                player.GetComponentInChildren<Health>().PlayerHealth = Random.Range(2, 10);
+
             }
         }
         // start timer
@@ -112,8 +137,14 @@ public class GameManagerVik : Photon.MonoBehaviour {
         // Button to leave room
         if (GUILayout.Button("Leave Room"))
         {
+            // store position
             string playerPos = player.transform.position.x + " " + player.transform.position.y + " " + player.transform.position.z;
             PlayerPrefs.SetString("playerPos", playerPos);
+
+            // store health 
+            int playerHealth = player.GetComponentInChildren<Health>().PlayerHealth;
+            PlayerPrefs.SetString("playerHealth", playerHealth.ToString());
+
             DoStorePosition();
 
             PhotonNetwork.LeaveRoom();
@@ -159,6 +190,11 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 4:
                 m_PlayerPosition = content.ToString();
                 Debug.Log("position : " + m_PlayerPosition);
+                break;
+            case 5:
+                m_PlayerHealth = content.ToString();
+                Debug.Log("health : " + m_PlayerHealth);
+
                 break;
         }
     }

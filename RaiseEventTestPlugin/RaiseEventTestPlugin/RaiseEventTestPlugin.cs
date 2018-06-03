@@ -137,32 +137,22 @@ namespace TestPlugin
             {
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerPos = "", playerName = "";
-                bool isPosition = false;
+                int playerHealth = 0;
 
-                for (int i = 0; i < playerInfo.Length; ++i)
-                {
-                    if (playerInfo[i] == ',')
-                    {
-                        isPosition = true;
-                        continue;
-                    }
-
-                    /// Set name and password
-                    if (!isPosition)
-                        playerName += playerInfo[i];
-                    else
-                        playerPos += playerInfo[i];
-                }
+                string[] m_storeInfo = playerInfo.Split(' ');
+                playerName = m_storeInfo[0];
+                playerPos = m_storeInfo[1];
+                playerHealth = int.Parse(m_storeInfo[2]);
 
                 /// Check using playerName for existing accounts
                 if (!NameExist(playerName, info.Request.EvCode))
                 {
                     /// Query statement
-                    sql = "INSERT INTO user_position (name, position) VALUES ('" + playerName + "','" + playerPos + "')";
+                    sql = "INSERT INTO user_position (name, position, health) VALUES ('" + playerName + "','" + playerPos + "','" + playerHealth + "')";
                 }
                 else
                 {
-                    sql = "UPDATE user_position SET position='" + playerPos + "' WHERE name='" + playerName + "'";
+                    sql = "UPDATE user_position SET position='" + playerPos + "', health='" + playerHealth.ToString() + "' WHERE name='" + playerName + "'";
                 }
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -199,6 +189,30 @@ namespace TestPlugin
                                                senderActor: 0,
                                                targetGroup: 0,
                                                data: new Dictionary<byte, object>() { { (byte)245, position } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+            }
+
+            else if (info.Request.EvCode == 5)
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerName = playerInfo;
+
+                if (NameExist(playerName, 3))
+                {
+                    /// Query statement
+                    sql = "SELECT health FROM user_position WHERE name='" + playerName + "'";
+                }
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                object hp = cmd.ExecuteScalar();
+
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, hp } },
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
             }

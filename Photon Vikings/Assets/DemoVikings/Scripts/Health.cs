@@ -1,15 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 /* This is for Health of Player */
 public class Health : MonoBehaviour
 {
-    private int m_health, m_maxhealth;
-
     [SerializeField]
     private TextMesh m_text;
+    private int m_health, m_maxhealth;
 
+    public int PlayerHealth
+    {
+        get
+        {
+            return m_health;
+        }
+        set
+        {
+            m_health = value;
+        }
+    }
+    public int PlayerMaxHealth
+    {
+        get
+        {
+            return m_maxhealth;
+        }
+        set
+        {
+            m_maxhealth = value;
+        }
+    }
+    
 
 	// Use this for initialization
 	void Awake ()
@@ -20,7 +43,8 @@ public class Health : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 		
 	}
 
@@ -29,4 +53,6 @@ public class Health : MonoBehaviour
     {
         return m_text.text = m_health + " / " + m_maxhealth;
     }
+
+    
 }
