@@ -31,19 +31,18 @@ public class PlayerName : MonoBehaviour
     private void PrintName()
     {
         // for each player in the room 
-        foreach (PhotonPlayer _player in PhotonNetwork.playerList)
+        foreach (var _player in PhotonNetwork.otherPlayers)
         {
-            if (_player.Equals(PhotonNetwork.player))
+            if (_player.IsLocal)
             {
                 m_text.text = PhotonNetwork.playerName; // return player's name
                 Debug.Log("This is player Name : " + m_text.text);
-
             }
+            
             else
             {
                 m_text.text = _player.NickName; //return others names
                 Debug.Log("This is other Name : " + m_text.text);
-
             }
         }
     }
