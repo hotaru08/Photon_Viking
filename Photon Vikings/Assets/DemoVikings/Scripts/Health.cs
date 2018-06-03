@@ -41,13 +41,14 @@ public class Health : MonoBehaviour/*, IPunObservable*/
     {
         //m_text.color = Color.red;
         m_maxhealth = 10;
-        PrintHealth();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log("In health : " + m_health);
+        PrintHealth();
+
+        //Debug.Log("In health : " + m_health);
 	}
 
     // Print health

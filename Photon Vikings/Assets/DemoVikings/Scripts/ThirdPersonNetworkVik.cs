@@ -60,12 +60,14 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             correctPlayerPos = (Vector3)stream.ReceiveNext();
             correctPlayerRot = (Quaternion)stream.ReceiveNext();
             GetComponent<Rigidbody>().velocity = (Vector3)stream.ReceiveNext();
-            GetComponentInChildren<Health>().m_health = (int)stream.ReceiveNext();
+            correctHealth = (int)stream.ReceiveNext();
+
             if (!appliedInitialUpdate)
             {
                 appliedInitialUpdate = true;
                 transform.position = correctPlayerPos;
                 transform.rotation = correctPlayerRot;
+                GetComponentInChildren<Health>().m_health = correctHealth;
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
         }
@@ -73,6 +75,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
 
     private Vector3 correctPlayerPos = Vector3.zero; //We lerp towards this
     private Quaternion correctPlayerRot = Quaternion.identity; //We lerp towards this
+    private int correctHealth = 0;
 
     void Update()
     {
@@ -81,6 +84,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             //Update remote player (smooth this, this looks good, at the cost of some accuracy)
             transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
+            GetComponentInChildren<Health>().m_health = correctHealth;
         }
     }
 
