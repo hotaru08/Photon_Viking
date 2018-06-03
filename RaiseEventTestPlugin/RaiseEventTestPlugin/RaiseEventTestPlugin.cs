@@ -178,23 +178,31 @@ namespace TestPlugin
                 {
                     /// Query statement
                     sql = "SELECT position FROM user_position WHERE name='" + playerName + "'";
+
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    object position = cmd.ExecuteScalar();
+
+
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, position } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
                 }
                 else
                 {
-                    sql = null;
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
                 }
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                object position = cmd.ExecuteScalar();
 
-
-                /// send back message to server
-                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
-                                               senderActor: 0,
-                                               targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, position } },
-                                               evCode: info.Request.EvCode,
-                                               cacheOp: 0);
             }
 
             else if (info.Request.EvCode == 5)
@@ -206,23 +214,41 @@ namespace TestPlugin
                 {
                     /// Query statement
                     sql = "SELECT health FROM user_position WHERE name='" + playerName + "'";
+
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    object hp = cmd.ExecuteScalar();
+
+
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, hp } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
                 }
                 else
                 {
-                    sql = null;
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
                 }
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                object hp = cmd.ExecuteScalar();
+                //MySqlCommand cmd = new MySqlCommand(sql, conn);
+                //object hp = cmd.ExecuteScalar();
 
 
-                /// send back message to server
-                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
-                                               senderActor: 0,
-                                               targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, hp } },
-                                               evCode: info.Request.EvCode,
-                                               cacheOp: 0);
+                ///// send back message to server
+                //this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                //                               senderActor: 0,
+                //                               targetGroup: 0,
+                //                               data: new Dictionary<byte, object>() { { (byte)245, hp } },
+                //                               evCode: info.Request.EvCode,
+                //                               cacheOp: 0);
             }
         }
 

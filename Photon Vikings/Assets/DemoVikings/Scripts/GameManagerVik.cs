@@ -22,6 +22,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         GetStorePosition();
         GetStoreHealth();
         PhotonNetwork.OnEventCall += this.OnEventHandler;
+        StartGame();
     }
 
     /* Store login info */
@@ -84,15 +85,13 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     }
 
-    void StartGame()
+    private void LoadPlayer()
     {
-        Camera.main.farClipPlane = 1000; //Main menu set this to 0.4 for a nicer BG    
-
         //prepare instantiation data for the viking: Randomly diable the axe and/or shield
         bool[] enabledRenderers = new bool[2];
-        enabledRenderers[0] = Random.Range(0,2)==0;//Axe
+        enabledRenderers[0] = Random.Range(0, 2) == 0;//Axe
         enabledRenderers[1] = Random.Range(0, 2) == 0; ;//Shield
-        
+
         object[] objs = new object[1]; // Put our bool data in an object array, to send
         objs[0] = enabledRenderers;
 
@@ -124,6 +123,48 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
             }
         }
+    }
+
+    void StartGame()
+    {
+        Camera.main.farClipPlane = 1000; //Main menu set this to 0.4 for a nicer BG    
+
+        ////prepare instantiation data for the viking: Randomly diable the axe and/or shield
+        //bool[] enabledRenderers = new bool[2];
+        //enabledRenderers[0] = Random.Range(0,2)==0;//Axe
+        //enabledRenderers[1] = Random.Range(0, 2) == 0; ;//Shield
+        
+        //object[] objs = new object[1]; // Put our bool data in an object array, to send
+        //objs[0] = enabledRenderers;
+
+        //// Spawn our local player
+        //if (player == null)
+        //{
+        //    if (m_PlayerPosition != null)
+        //    {
+        //        //Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
+        //        string[] positions = m_PlayerPosition.Split(' ');
+        //        Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
+        //        player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
+        //        //pet = PhotonNetwork.Instantiate(this.petPrefabName, positionForPlayer + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
+        //        //if(player.GetComponent<PhotonView>().isMine)
+        //        //    pet.GetComponent<PetMovement>().SetPlayer(player);
+
+        //        // health, read from server
+        //        player.GetComponentInChildren<Health>().PlayerHealth = int.Parse(m_PlayerHealth);
+        //    }
+        //    else
+        //    {
+        //        player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
+        //        //pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3 (0,0, -1), Quaternion.identity,0, objs);
+        //        //if (player.GetComponent<PhotonView>().isMine)
+        //        //    pet.GetComponent<PetMovement>().SetPlayer(player);
+
+        //        // set health
+        //        player.GetComponentInChildren<Health>().PlayerHealth = Random.Range(2, 10);
+
+        //    }
+        //}
         // start timer
         m_timer = 0.0f;
         m_btimerStart = true;
@@ -187,14 +228,16 @@ public class GameManagerVik : Photon.MonoBehaviour {
             //    Debug.Log("position : " + m_PlayerPosition);
             //    break;
             case 4:
-                m_PlayerPosition = content.ToString();
+                if(content != null)
+                    m_PlayerPosition = content.ToString();
                 Debug.Log("position : " + m_PlayerPosition);
                 break;
             case 5:
-                m_PlayerHealth = content.ToString();
+                if (content != null)
+                    m_PlayerHealth = content.ToString();
                 Debug.Log("health : " + m_PlayerHealth);
-                StartGame();
-
+                //StartGame();
+                LoadPlayer();
                 break;
         }
     }
