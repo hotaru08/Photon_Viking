@@ -78,7 +78,7 @@ public class PetMovement : MonoBehaviour {
 	void Update () {
         transform.LookAt(new Vector3(playerToFollow.transform.position.x, transform.position.y, playerToFollow.transform.position.z));
         DistanceToPlayer = (transform.position - playerToFollow.transform.position).magnitude;
-        transform.position = playerToFollow.transform.position - new Vector3(0,0,-1);
+
         if(DistanceToPlayer > minDist)
         {
             Vector3 movement = target.transform.forward;
