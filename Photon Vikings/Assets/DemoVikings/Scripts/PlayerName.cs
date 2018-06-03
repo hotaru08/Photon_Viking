@@ -23,7 +23,7 @@ public class PlayerName : MonoBehaviour
         /* Add to method to carry out event */
         //PhotonNetwork.OnEventCall += this.OnEventHandler;
         //m_playerName = "";
-        m_text.text = GetComponentInParent<PhotonView>().owner.NickName;
+        //m_text.text = GetComponentInParent<PhotonView>().owner.NickName;
         //PrintName();
     }
 
