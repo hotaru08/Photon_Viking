@@ -139,7 +139,7 @@ namespace TestPlugin
                 string playerPos = "", playerName = "";
                 int playerHealth = 0;
 
-                string[] m_storeInfo = playerInfo.Split(' ');
+                string[] m_storeInfo = playerInfo.Split(',');
                 playerName = m_storeInfo[0];
                 playerPos = m_storeInfo[1];
                 playerHealth = int.Parse(m_storeInfo[2]);
@@ -179,6 +179,10 @@ namespace TestPlugin
                     /// Query statement
                     sql = "SELECT position FROM user_position WHERE name='" + playerName + "'";
                 }
+                else
+                {
+                    sql = null;
+                }
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object position = cmd.ExecuteScalar();
@@ -202,6 +206,10 @@ namespace TestPlugin
                 {
                     /// Query statement
                     sql = "SELECT health FROM user_position WHERE name='" + playerName + "'";
+                }
+                else
+                {
+                    sql = null;
                 }
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);

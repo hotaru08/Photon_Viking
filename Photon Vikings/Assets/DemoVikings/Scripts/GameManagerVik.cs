@@ -22,7 +22,6 @@ public class GameManagerVik : Photon.MonoBehaviour {
         GetStorePosition();
         GetStoreHealth();
         PhotonNetwork.OnEventCall += this.OnEventHandler;
-        StartGame();
     }
 
     /* Store login info */
@@ -39,7 +38,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     public void DoStorePosition()
     {
         byte evCode = 3; // evCode for saving position
-        string contentMessage = PhotonNetwork.playerName + " " + PlayerPrefs.GetString("playerPos") + " " + PlayerPrefs.GetString("playerHealth");
+        string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos") + "," + PlayerPrefs.GetString("playerHealth");
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -194,6 +193,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 5:
                 m_PlayerHealth = content.ToString();
                 Debug.Log("health : " + m_PlayerHealth);
+                StartGame();
 
                 break;
         }
