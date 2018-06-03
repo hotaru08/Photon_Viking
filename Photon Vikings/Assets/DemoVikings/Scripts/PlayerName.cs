@@ -19,11 +19,6 @@ public class PlayerName : MonoBehaviour
         /* Add to method to carry out event */
         //PhotonNetwork.OnEventCall += this.OnEventHandler;
         //m_playerName = "";
-        
-    }
-
-    private void Update()
-    {
         PrintName();
     }
 
@@ -32,7 +27,8 @@ public class PlayerName : MonoBehaviour
     {
         if(PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
             m_text.text = PlayerPrefs.GetString("playerName"); // return player's name
-        Debug.Log("This is player Name : " + m_text.text);
+        //Debug.Log("This is player Name : " + m_text.text);
+
         // for each player in the room 
         foreach (var _player in PhotonNetwork.otherPlayers)
         {
@@ -40,11 +36,10 @@ public class PlayerName : MonoBehaviour
             {
                 continue;
             }
-            
             else
             {
                 m_text.text = _player.NickName; //return others names
-                Debug.Log("This is other Name : " + m_text.text);
+                //Debug.Log("This is other Name : " + m_text.text);
             }
         }
     }
