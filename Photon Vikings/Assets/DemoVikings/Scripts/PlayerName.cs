@@ -20,7 +20,7 @@ public class PlayerName : MonoBehaviour
         //PhotonNetwork.OnEventCall += this.OnEventHandler;
         //m_playerName = "";
         
-	}
+    }
 
     private void Update()
     {
@@ -36,10 +36,14 @@ public class PlayerName : MonoBehaviour
             if (_player.Equals(PhotonNetwork.player))
             {
                 m_text.text = PhotonNetwork.playerName; // return player's name
+                Debug.Log("This is player Name : " + m_text.text);
+
             }
             else
             {
                 m_text.text = _player.NickName; //return others names
+                Debug.Log("This is other Name : " + m_text.text);
+
             }
         }
     }
@@ -56,5 +60,5 @@ public class PlayerName : MonoBehaviour
     //            break;
     //    }
     //}
-    
+
 }
