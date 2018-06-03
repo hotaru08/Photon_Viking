@@ -147,7 +147,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     /* Receive data of events from server */
     private void OnEventHandler(byte eventCode, object content, int senderId)
     {
-        switch(eventCode)
+        switch (eventCode)
         {
             //case 2:
             //    Debug.Log(string.Format("Message from Server : {0}", (string)content));
@@ -157,13 +157,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
             //    Debug.Log("position : " + m_PlayerPosition);
             //    break;
             case 4:
-                if (PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
-                {
-                    m_PlayerPosition = (string)content;
-                    Debug.Log("position : " + m_PlayerPosition);
-                    StartGame();
-                }
+                m_PlayerPosition = (string)content;
+                Debug.Log("position : " + m_PlayerPosition);
+                StartGame();
                 break;
-        } 
+        }
     }
 }
