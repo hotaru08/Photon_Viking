@@ -6,12 +6,14 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
 {
     ThirdPersonCameraNET cameraScript;
     ThirdPersonControllerNET controllerScript;
+    Health healthScript;
     private bool appliedInitialUpdate;
 
     void Awake()
     {
         cameraScript = GetComponent<ThirdPersonCameraNET>();
         controllerScript = GetComponent<ThirdPersonControllerNET>();
+        healthScript = GetComponentInChildren<Health>();
 
     }
     void Start()
@@ -22,6 +24,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             //MINE: local player, simply enable the local scripts
             cameraScript.enabled = true;
             controllerScript.enabled = true;
+            healthScript.enabled = true;
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 2, -10);
             Camera.main.transform.localEulerAngles = new Vector3(10, 0, 0);
@@ -31,6 +34,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         {
             cameraScript.enabled = false;
             controllerScript.enabled = true;
+            healthScript.enabled = true;
 
         }
         controllerScript.SetIsRemotePlayer(!photonView.isMine);
@@ -47,7 +51,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             stream.SendNext(transform.position);
             stream.SendNext(transform.rotation);
             stream.SendNext(GetComponent<Rigidbody>().velocity);
-
+            stream.SendNext(GetComponentInChildren<Health>().m_health);
         }
         else
         {
@@ -56,7 +60,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             correctPlayerPos = (Vector3)stream.ReceiveNext();
             correctPlayerRot = (Quaternion)stream.ReceiveNext();
             GetComponent<Rigidbody>().velocity = (Vector3)stream.ReceiveNext();
-
+            GetComponentInChildren<Health>().m_health = (int)stream.ReceiveNext();
             if (!appliedInitialUpdate)
             {
                 appliedInitialUpdate = true;

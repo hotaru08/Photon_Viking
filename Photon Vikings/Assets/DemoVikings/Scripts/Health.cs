@@ -8,7 +8,7 @@ public class Health : MonoBehaviour, IPunObservable
 {
     [SerializeField]
     private TextMesh m_text;
-    private int m_health, m_maxhealth;
+    public int m_health, m_maxhealth;
 
     public int PlayerHealth
     {
@@ -57,19 +57,19 @@ public class Health : MonoBehaviour, IPunObservable
     }
 
     // stream - send over network
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (stream.isWriting)
-        {
-            // We own this player: send the others our data
-            //stream.SendNext(IsFiring);
-            stream.SendNext(m_health);
-        }
-        else
-        {
-            // Network player, receive data
-            //this.IsFiring = (bool)stream.ReceiveNext();
-            this.m_health = (int)stream.ReceiveNext();
-        }
-    }
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    if (stream.isWriting)
+    //    {
+    //        // We own this player: send the others our data
+    //        //stream.SendNext(IsFiring);
+    //        stream.SendNext(m_health);
+    //    }
+    //    else
+    //    {
+    //        // Network player, receive data
+    //        //this.IsFiring = (bool)stream.ReceiveNext();
+    //        this.m_health = (int)stream.ReceiveNext();
+    //    }
+    //}
 }
