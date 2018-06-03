@@ -157,7 +157,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
             //    Debug.Log("position : " + m_PlayerPosition);
             //    break;
             case 4:
-                m_PlayerPosition = (string)content;
+                m_PlayerPosition = content.ToString();
                 Debug.Log("position : " + m_PlayerPosition);
                 break;
         }
