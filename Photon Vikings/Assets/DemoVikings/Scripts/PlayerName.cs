@@ -32,14 +32,14 @@ public class PlayerName : MonoBehaviour
         //if(PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
         //m_text.text = PlayerPrefs.GetString("playerName"); // return player's name
 
-        Debug.Log(PhotonNetwork.player.ID + ", " + GetComponentInParent<PhotonView>().ownerId);
+        //Debug.Log(PhotonNetwork.player.ID + ", " + GetComponentInParent<PhotonView>().ownerId);
 
         if (GetComponentInParent<PhotonView>().isMine)
         {
             m_text.text = PhotonNetwork.playerName; // return player's name
             Debug.Log("This is player Name : " + m_text.text);
         }
-        else
+        else if (!GetComponentInParent<PhotonView>().isMine)
         {
             // for each player in the room 
             foreach (var _player in PhotonNetwork.otherPlayers)
