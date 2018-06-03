@@ -105,9 +105,9 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 string[] positions = m_PlayerPosition.Split(' ');
                 Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
                 player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
-                pet = PhotonNetwork.Instantiate(this.petPrefabName, positionForPlayer + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
                 if (player.GetComponent<PhotonView>().isMine && !HasPet)
                 {
+                    pet = PhotonNetwork.Instantiate(this.petPrefabName, positionForPlayer + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
                     pet.GetComponent<PetMovement>().SetPlayer(player);
                     HasPet = true;
                 }
@@ -117,9 +117,9 @@ public class GameManagerVik : Photon.MonoBehaviour {
             else
             {
                 player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
-                pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
                 if (player.GetComponent<PhotonView>().isMine && !HasPet)
                 {
+                    pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3(0, 0, -1), Quaternion.identity, 0, objs);
                     pet.GetComponent<PetMovement>().SetPlayer(player);
                     HasPet = true;
                 }
