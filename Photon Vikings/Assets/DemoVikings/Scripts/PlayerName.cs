@@ -8,6 +8,8 @@ public class PlayerName : MonoBehaviour
 {
     [SerializeField]
     private TextMesh m_text;
+    [SerializeField]
+    private GameObject m_player;
 
     //private string m_playerName;
 
@@ -17,20 +19,29 @@ public class PlayerName : MonoBehaviour
         /* Add to method to carry out event */
         //PhotonNetwork.OnEventCall += this.OnEventHandler;
         //m_playerName = "";
-        PrintName();
+        
 	}
 
-    /* Print name of player */
-    private string PrintName()
+    private void Update()
     {
+        PrintName();
+    }
+
+    /* Print name of players */
+    private void PrintName()
+    {
+        // for each player in the room 
         foreach (PhotonPlayer _player in PhotonNetwork.playerList)
         {
-            return m_text.text = _player.NickName;
+            if (_player.Equals(PhotonNetwork.player))
+            {
+                m_text.text = PhotonNetwork.playerName; // return player's name
+            }
+            else
+            {
+                m_text.text = _player.NickName; //return others names
+            }
         }
-
-        return null;
-
-           //return m_text.text = PhotonNetwork.playerName;
     }
 
     ///* Receive data of events from server */
