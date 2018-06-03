@@ -8,8 +8,12 @@ public class PlayerName : MonoBehaviour
 {
     [SerializeField]
     private TextMesh m_text;
-    [SerializeField]
-    private GameObject m_player;
+    
+    private static GameObject m_player;
+    public void SetPlayer(GameObject _player)
+    {
+        m_player = _player;
+    }
 
     //private string m_playerName;
 
@@ -25,21 +29,23 @@ public class PlayerName : MonoBehaviour
     /* Print name of players */
     private void PrintName()
     {
-        if(PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
-            m_text.text = PlayerPrefs.GetString("playerName"); // return player's name
-        //Debug.Log("This is player Name : " + m_text.text);
+        //if(PhotonNetwork.playerName == PlayerPrefs.GetString("playerName"))
+        //m_text.text = PlayerPrefs.GetString("playerName"); // return player's name
 
-        // for each player in the room 
-        foreach (var _player in PhotonNetwork.otherPlayers)
+        Debug.Log(PhotonNetwork.player.ID + ", " + GetComponentInParent<PhotonView>().ownerId);
+
+        if (GetComponentInParent<PhotonView>().isMine)
         {
-            if (_player.IsLocal)
-            {
-                continue;
-            }
-            else
+            m_text.text = PhotonNetwork.playerName; // return player's name
+            Debug.Log("This is player Name : " + m_text.text);
+        }
+        else
+        {
+            // for each player in the room 
+            foreach (var _player in PhotonNetwork.otherPlayers)
             {
                 m_text.text = _player.NickName; //return others names
-                //Debug.Log("This is other Name : " + m_text.text);
+                Debug.Log("This is other Name : " + m_text.text);
             }
         }
     }
