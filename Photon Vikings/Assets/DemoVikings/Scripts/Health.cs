@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 
 /* This is for Health of Player */
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, IPunObservable
 {
     [SerializeField]
     private TextMesh m_text;
@@ -32,20 +32,22 @@ public class Health : MonoBehaviour
             m_maxhealth = value;
         }
     }
+
+    private GameObject m_player;
     
 
 	// Use this for initialization
-	void Awake ()
+	void Start ()
     {
         //m_text.color = Color.red;
-        m_health = m_maxhealth = 10;
+        m_maxhealth = 10;
         PrintHealth();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-		
+        Debug.Log("In health : " + m_health);
 	}
 
     // Print health
@@ -54,5 +56,20 @@ public class Health : MonoBehaviour
         return m_text.text = m_health + " / " + m_maxhealth;
     }
 
-    
+    // stream - send over network
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            // We own this player: send the others our data
+            //stream.SendNext(IsFiring);
+            stream.SendNext(m_health);
+        }
+        else
+        {
+            // Network player, receive data
+            //this.IsFiring = (bool)stream.ReceiveNext();
+            this.m_health = (int)stream.ReceiveNext();
+        }
+    }
 }
