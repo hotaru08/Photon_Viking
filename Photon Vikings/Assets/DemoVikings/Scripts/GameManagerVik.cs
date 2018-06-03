@@ -9,7 +9,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
     public string playerPrefabName = "Charprefab";
     private float m_timer;
     private bool m_btimerStart = false;
-    private GameObject player;
+    private static GameObject player;
 
     private static string m_PlayerPosition;
 
@@ -18,7 +18,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.OnEventCall += this.OnEventHandler;
         DoRaiseEvent();
         GetStorePosition();
-        StartGame();
+        //StartGame();
     }
 
     /* Store login info */
@@ -78,16 +78,18 @@ public class GameManagerVik : Photon.MonoBehaviour {
         objs[0] = enabledRenderers;
 
         // Spawn our local player
-        if (m_PlayerPosition != null)
+        if (player == null)
         {
-            Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
-            string[] positions = m_PlayerPosition.Split(' ');
-            Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
-            player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
+            if (m_PlayerPosition != null)
+            {
+                Debug.Log("Creating player at its saved position : " + m_PlayerPosition);
+                string[] positions = m_PlayerPosition.Split(' ');
+                Vector3 positionForPlayer = new Vector3(float.Parse(positions[0]), float.Parse(positions[1]), float.Parse(positions[2]));
+                player = PhotonNetwork.Instantiate(this.playerPrefabName, positionForPlayer, Quaternion.identity, 0, objs);
+            }
+            else
+                player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
         }
-        else
-            player = PhotonNetwork.Instantiate(this.playerPrefabName, transform.position, Quaternion.identity, 0, objs);
-
         // start timer
         m_timer = 0.0f;
         m_btimerStart = true;
@@ -102,8 +104,8 @@ public class GameManagerVik : Photon.MonoBehaviour {
         {
             string playerPos = player.transform.position.x + " " + player.transform.position.y + " " + player.transform.position.z;
             PlayerPrefs.SetString("playerPos", playerPos);
-            
             DoStorePosition();
+
             PhotonNetwork.LeaveRoom();
         }
 
@@ -147,7 +149,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 4:
                 m_PlayerPosition = (string)content;
                 Debug.Log("position : " + m_PlayerPosition);
-                //StartGame();
+                StartGame();
                 break;
         } 
     }
