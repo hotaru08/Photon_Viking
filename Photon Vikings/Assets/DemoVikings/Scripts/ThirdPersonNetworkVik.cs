@@ -10,6 +10,8 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
     Health healthScript;
     Highscore scoreScript;
     private bool appliedInitialUpdate;
+    Party partyScript;
+    Damage dmgScript;
 
     void Awake()
     {
@@ -18,6 +20,8 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         healthScript = GetComponentInChildren<Health>();
         scoreScript = GetComponent<Highscore>();
         meleeScript = GetComponentInChildren<Melee>();
+        partyScript = GetComponent<Party>();
+        dmgScript = GetComponent<Damage>();
 
     }
     void Start()
@@ -31,6 +35,8 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             healthScript.enabled = true;
             scoreScript.enabled = true;
             meleeScript.enabled = true;
+            partyScript.enabled = true;
+            dmgScript.enabled = true;
 
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 2, -10);
@@ -43,6 +49,8 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             healthScript.enabled = true;
             scoreScript.enabled = true;
             meleeScript.enabled = false;
+            partyScript.enabled = false;
+            dmgScript.enabled = false;
 
         }
         controllerScript.SetIsRemotePlayer(!photonView.isMine);
