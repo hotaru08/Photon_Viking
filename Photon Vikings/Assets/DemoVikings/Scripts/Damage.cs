@@ -7,6 +7,7 @@ public class Damage : Photon.MonoBehaviour
 {
     private bool isDamaged;
     private float GodMode;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -34,7 +35,8 @@ public class Damage : Photon.MonoBehaviour
             //if (photonView.isMine)
             //    return;
 
-            GetComponentInChildren<Health>().m_health -= 1;
+            GetComponentInChildren<Health>().m_health--; ;
+            other.transform.parent.parent.GetComponent<Highscore>().m_score++;
             isDamaged = true;
         }
 
