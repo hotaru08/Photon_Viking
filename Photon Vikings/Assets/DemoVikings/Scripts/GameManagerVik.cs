@@ -211,6 +211,21 @@ public class GameManagerVik : Photon.MonoBehaviour {
             PhotonNetwork.LeaveRoom();
         }
 
+        // Print "U DIED" when died
+        if (Health.isDied)
+        {
+            GUILayout.BeginArea(new Rect(Screen.width / 2 - 50, Screen.height / 2 - 50, 400, 300));
+
+            GUILayout.BeginHorizontal();
+            GUI.color = Color.red;
+            GUILayout.Label("YOU DIED!!!");
+            GUI.color = Color.white;
+            GUILayout.EndHorizontal();
+            
+            GUILayout.EndArea();
+        }
+        
+
         //// Broadcast login of player
         //if (m_timer < 5.0f)
         //{

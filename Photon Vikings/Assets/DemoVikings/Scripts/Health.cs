@@ -34,10 +34,11 @@ public class Health : MonoBehaviour/*, IPunObservable*/
     }
 
     private GameObject m_player;
-    public static bool isDied, isShielded, isSpawned;
+    public static bool isDied;
+    private bool isShielded, isSpawned;
     private double m_timer, m_shieldtime;
 
-    private const int MINUS_SCORE_DIED = 20;
+    private const int MINUS_SCORE_DIED = 5;
 
     public string shield = "Shield";
     public GameObject m_shield;
@@ -68,11 +69,12 @@ public class Health : MonoBehaviour/*, IPunObservable*/
         // When died, respawn after buffer
         if (isDied)
         {
-            transform.parent.GetComponent<Highscore>().m_score -= MINUS_SCORE_DIED;
             m_timer += Time.deltaTime;
             //Debug.Log("died Time : " + m_timer);
             if (m_timer > 3.0)
             {
+                transform.parent.GetComponent<Highscore>().m_score -= MINUS_SCORE_DIED;
+
                 isShielded = true;
                 isSpawned = true;
                 m_health = m_maxhealth;
@@ -106,7 +108,7 @@ public class Health : MonoBehaviour/*, IPunObservable*/
             }
         }
     }
-
+    
     // Print health
     public string PrintHealth()
     {
