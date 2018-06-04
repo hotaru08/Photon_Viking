@@ -29,8 +29,8 @@ public class Melee : Photon.MonoBehaviour
             if(hitbox)
                 PhotonNetwork.Destroy(hitbox);
 
-            hitbox.transform.SetParent(transform);
             hitbox = PhotonNetwork.Instantiate(meleeBox, transform.position, Quaternion.identity, 0);
+            hitbox.transform.SetParent(transform);
             hitbox.transform.forward = transform.forward;
 
             hitboxSpawn = true;
