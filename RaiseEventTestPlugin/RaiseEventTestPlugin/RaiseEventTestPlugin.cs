@@ -76,7 +76,7 @@ namespace TestPlugin
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
             }
-            else if (info.Request.EvCode == 2) // Viking 
+            else if (info.Request.EvCode == 2) // Login of Viking 
             {
                 /// Getting info from client and saving to SQL
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
@@ -133,32 +133,32 @@ namespace TestPlugin
                                                cacheOp: 0);
             }
 
-            else if (info.Request.EvCode == 3)
+            else if (info.Request.EvCode == 3) // Variables of Viking
             {
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerPos = "", playerName = "";
-                int playerHealth = 0;
+                int playerHealth = 0, playerScore = 0;
 
                 string[] m_storeInfo = playerInfo.Split(',');
                 playerName = m_storeInfo[0];
                 playerPos = m_storeInfo[1];
                 playerHealth = int.Parse(m_storeInfo[2]);
+                playerScore = int.Parse(m_storeInfo[3]);
 
                 /// Check using playerName for existing accounts
                 if (!NameExist(playerName, info.Request.EvCode))
                 {
                     /// Query statement
-                    sql = "INSERT INTO user_position (name, position, health) VALUES ('" + playerName + "','" + playerPos + "','" + playerHealth + "')";
+                    sql = "INSERT INTO user_position (name, position, health, score) VALUES ('" + playerName + "','" + playerPos + "','" + playerHealth + "','" + playerScore + "')";
                 }
                 else
                 {
-                    sql = "UPDATE user_position SET position='" + playerPos + "', health='" + playerHealth.ToString() + "' WHERE name='" + playerName + "'";
+                    sql = "UPDATE user_position SET position='" + playerPos + "', health='" + playerHealth.ToString() + "', score='" + playerScore.ToString() + "' WHERE name='" + playerName + "'";
                 }
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
-
-
+                
                 /// send back message to server
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
@@ -169,7 +169,7 @@ namespace TestPlugin
 
             }
 
-            else if (info.Request.EvCode == 4)
+            else if (info.Request.EvCode == 4) // Get position of player
             {
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerName = playerInfo;
@@ -201,11 +201,9 @@ namespace TestPlugin
                                                    evCode: info.Request.EvCode,
                                                    cacheOp: 0);
                 }
-
-
             }
 
-            else if (info.Request.EvCode == 5)
+            else if (info.Request.EvCode == 5) // get health of player 
             {
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerName = playerInfo;
@@ -217,7 +215,6 @@ namespace TestPlugin
 
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     object hp = cmd.ExecuteScalar();
-
 
                     /// send back message to server
                     this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
@@ -237,21 +234,9 @@ namespace TestPlugin
                                                    evCode: info.Request.EvCode,
                                                    cacheOp: 0);
                 }
-
-                //MySqlCommand cmd = new MySqlCommand(sql, conn);
-                //object hp = cmd.ExecuteScalar();
-
-
-                ///// send back message to server
-                //this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
-                //                               senderActor: 0,
-                //                               targetGroup: 0,
-                //                               data: new Dictionary<byte, object>() { { (byte)245, hp } },
-                //                               evCode: info.Request.EvCode,
-                //                               cacheOp: 0);
             }
 
-            else if (info.Request.EvCode == 6)
+            else if (info.Request.EvCode == 6) // Add friends to vikings
             {
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string[] store = playerInfo.Split(',');
@@ -271,6 +256,41 @@ namespace TestPlugin
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
             }
+
+            else if (info.Request.EvCode == 7) // get score of player
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerName = playerInfo;
+
+                if (NameExist(playerName, 3))
+                {
+                    /// Query statement
+                    sql = "SELECT score FROM user_position WHERE name='" + playerName + "'";
+
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    object score = cmd.ExecuteScalar();
+
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, score } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
+                else
+                {
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
+            }
+
+
         }
 
         /* Linking to SQL */

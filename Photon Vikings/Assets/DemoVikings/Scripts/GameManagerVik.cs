@@ -15,13 +15,17 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     private static string m_PlayerPosition;
     private static string m_PlayerHealth;
+    private static string m_PlayerScore;
     private static bool HasPet = false;
 
     void OnJoinedRoom()
     {
+        // get data from events
         DoRaiseEvent();
         GetStorePosition();
         GetStoreHealth();
+        GetStoreScore();
+
         PhotonNetwork.OnEventCall += this.OnEventHandler;
         StartGame();
     }
@@ -37,10 +41,11 @@ public class GameManagerVik : Photon.MonoBehaviour {
     }
 
     /* Store position and health of player */
-    public void DoStorePosition()
+    public void DoStoreVariables()
     {
         byte evCode = 3; // evCode for saving position
-        string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos") + "," + PlayerPrefs.GetString("playerHealth");
+        string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerPos") 
+                                + "," + PlayerPrefs.GetString("playerHealth") + "," + PlayerPrefs.GetString("playerScore");
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -55,19 +60,20 @@ public class GameManagerVik : Photon.MonoBehaviour {
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
 
-    //public void DoStoreHealth()
-    //{
-    //    byte evCode = 5;
-    //    string contentMessage = PhotonNetwork.playerName + "," + PlayerPrefs.GetString("playerHealth");
-    //    byte[] content = Encoding.UTF8.GetBytes(contentMessage);
-    //    bool reliable = true;
-    //    PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
-    //}
-
     /* Get health of player */
     public void GetStoreHealth()
     {
         byte evCode = 5;
+        string contentMessage = PhotonNetwork.playerName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    /* Get score of player */
+    public void GetStoreScore()
+    {
+        byte evCode = 7;
         string contentMessage = PhotonNetwork.playerName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
@@ -111,6 +117,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
                 // health, read from server
                 player.GetComponentInChildren<Health>().PlayerHealth = int.Parse(m_PlayerHealth);
+
+                // score, read from server
+                player.GetComponent<Highscore>().m_score = int.Parse(m_PlayerScore);
+
             }
             else
             {
@@ -120,6 +130,8 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 pet.GetComponent<PetMovement>().SetPlayer(player);
                 // set health
                 player.GetComponentInChildren<Health>().PlayerHealth = Random.Range(2, 10);
+                // set score
+                player.GetComponent<Highscore>().m_score = Random.Range(0,100);
 
             }
         }
@@ -185,23 +197,68 @@ public class GameManagerVik : Photon.MonoBehaviour {
             int playerHealth = player.GetComponentInChildren<Health>().PlayerHealth;
             PlayerPrefs.SetString("playerHealth", playerHealth.ToString());
 
-            DoStorePosition();
+            // store score
+            int playerScore = player.GetComponent<Highscore>().m_score;
+            PlayerPrefs.SetString("playerScore", playerScore.ToString());
+
+            DoStoreVariables();
             HasPet = false;
             PhotonNetwork.LeaveRoom();
         }
 
-        // Broadcast login of player
-        if (m_timer < 5.0f)
+        //// Broadcast login of player
+        //if (m_timer < 5.0f)
+        //{
+        //    GUILayout.BeginHorizontal();
+        //    GUI.color = Color.yellow;
+        //    GUILayout.Label(PhotonNetwork.playerName + " has logged in!");
+        //    GUI.color = Color.white;
+        //    GUILayout.EndHorizontal();
+
+        //}
+        //else
+        //    m_btimerStart = false;
+
+        // ------ RANK 
+        GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 1000, 1000));
+
+        // board indexes
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("RANK");
+        GUILayout.EndHorizontal();
+
+        for (int i = 1; i <= 10; ++i)
         {
             GUILayout.BeginHorizontal();
-            GUI.color = Color.yellow;
-            GUILayout.Label(PhotonNetwork.playerName + " has logged in!");
-            GUI.color = Color.white;
+            GUILayout.Label(i + ".");
             GUILayout.EndHorizontal();
-
         }
-        else
-            m_btimerStart = false;
+        GUILayout.EndArea();
+
+        // ------ PLAYER LIST 
+        GUILayout.BeginArea(new Rect(Screen.width - 150, 0, 1000, 1000));
+
+        // board indexes
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("PLAYER");
+        GUILayout.EndHorizontal();
+
+        foreach ( var _player in PhotonNetwork.playerList)
+        {
+            //GUILayout.BeginHorizontal();
+            //GUILayout.Label(i + ".");
+            //GUILayout.EndHorizontal();
+        }
+
+
+        //for (int i = 1; i <= 10; ++i)
+        //{
+        //    GUILayout.BeginHorizontal();
+        //    GUILayout.Label(i + ".");
+        //    GUILayout.EndHorizontal();
+        //}
+        GUILayout.EndArea();
+
     }
 
     void OnDisconnectedFromPhoton()
@@ -211,8 +268,8 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     public void Update()
     {
-        if (m_btimerStart)
-            m_timer += Time.deltaTime;
+        //if (m_btimerStart)
+        //    m_timer += Time.deltaTime;
     }
 
     /* Receive data of events from server */
@@ -236,7 +293,11 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 if (content != null)
                     m_PlayerHealth = content.ToString();
                 Debug.Log("health : " + m_PlayerHealth);
-                //StartGame();
+                break;
+            case 7:
+                if (content != null)
+                    m_PlayerScore = content.ToString();
+                Debug.Log("Score: " + m_PlayerScore);
                 LoadPlayer();
                 break;
         }
