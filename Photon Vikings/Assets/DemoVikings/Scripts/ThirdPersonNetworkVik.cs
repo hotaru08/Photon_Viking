@@ -7,6 +7,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
     ThirdPersonCameraNET cameraScript;
     ThirdPersonControllerNET controllerScript;
     Health healthScript;
+    Highscore scoreScript;
     private bool appliedInitialUpdate;
 
     void Awake()
@@ -14,6 +15,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         cameraScript = GetComponent<ThirdPersonCameraNET>();
         controllerScript = GetComponent<ThirdPersonControllerNET>();
         healthScript = GetComponentInChildren<Health>();
+        scoreScript = GetComponent<Highscore>();
 
     }
     void Start()
@@ -25,16 +27,18 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             cameraScript.enabled = true;
             controllerScript.enabled = true;
             healthScript.enabled = true;
+            scoreScript.enabled = true;
+
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 2, -10);
             Camera.main.transform.localEulerAngles = new Vector3(10, 0, 0);
-
         }
         else
         {
             cameraScript.enabled = false;
             controllerScript.enabled = true;
             healthScript.enabled = true;
+            scoreScript.enabled = true;
 
         }
         controllerScript.SetIsRemotePlayer(!photonView.isMine);
@@ -52,6 +56,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             stream.SendNext(transform.rotation);
             stream.SendNext(GetComponent<Rigidbody>().velocity);
             stream.SendNext(GetComponentInChildren<Health>().m_health);
+            stream.SendNext(GetComponent<Highscore>().m_score);
         }
         else
         {
@@ -61,6 +66,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             correctPlayerRot = (Quaternion)stream.ReceiveNext();
             GetComponent<Rigidbody>().velocity = (Vector3)stream.ReceiveNext();
             correctHealth = (int)stream.ReceiveNext();
+            correctScore = (int)stream.ReceiveNext();
 
             if (!appliedInitialUpdate)
             {
@@ -68,6 +74,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
                 transform.position = correctPlayerPos;
                 transform.rotation = correctPlayerRot;
                 GetComponentInChildren<Health>().m_health = correctHealth;
+                GetComponent<Highscore>().m_score = correctScore;
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
         }
@@ -76,6 +83,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
     private Vector3 correctPlayerPos = Vector3.zero; //We lerp towards this
     private Quaternion correctPlayerRot = Quaternion.identity; //We lerp towards this
     private int correctHealth = 0;
+    private int correctScore = 0;
 
     void Update()
     {
@@ -85,6 +93,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * 5);
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
             GetComponentInChildren<Health>().m_health = correctHealth;
+            GetComponent<Highscore>().m_score = correctScore;
         }
     }
 
