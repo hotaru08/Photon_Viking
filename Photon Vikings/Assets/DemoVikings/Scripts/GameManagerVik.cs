@@ -129,10 +129,10 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 pet = PhotonNetwork.Instantiate(this.petPrefabName, transform.position + new Vector3(0, 0, -1), Quaternion.identity, 0);
                 pet.GetComponent<PetMovement>().SetPlayer(player);
                 // set health
-                player.GetComponentInChildren<Health>().PlayerHealth = Random.Range(2, 10);
+                player.GetComponentInChildren<Health>().PlayerHealth = 10;
                 
                 // set score
-                player.GetComponent<Highscore>().m_score = Random.Range(0,100);
+                player.GetComponent<Highscore>().m_score = 0;
                
             }
         }
