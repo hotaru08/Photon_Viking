@@ -7,8 +7,8 @@ public class Party : MonoBehaviour {
     public string[] members;
 	// Use this for initialization
 	void Start () {
-        members = null;
-	}
+        members = GameObject.FindGameObjectWithTag("Code").GetComponent<ChatVik>().Party;
+    }
 	
 	// Update is called once per frame
 	void Update () {

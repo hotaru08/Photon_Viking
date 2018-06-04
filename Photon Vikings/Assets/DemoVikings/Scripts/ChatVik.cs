@@ -174,6 +174,7 @@ public class ChatVik : Photon.MonoBehaviour
     void OnJoinedRoom()
     {
         this.enabled = true;
+        GetParty();
         PhotonNetwork.OnEventCall += this.OnEventHandler;
     }
     void OnCreatedRoom()
