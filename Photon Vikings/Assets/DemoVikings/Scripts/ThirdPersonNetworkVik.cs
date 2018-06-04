@@ -61,6 +61,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             stream.SendNext(GetComponent<Rigidbody>().velocity);
             stream.SendNext(GetComponentInChildren<Health>().m_health);
             stream.SendNext(GetComponent<Highscore>().m_score);
+            stream.SendNext(GetComponentInChildren<Melee>().hitbox.transform.position);
         }
         else
         {
@@ -71,6 +72,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             GetComponent<Rigidbody>().velocity = (Vector3)stream.ReceiveNext();
             correctHealth = (int)stream.ReceiveNext();
             correctScore = (int)stream.ReceiveNext();
+            correctBoxPos = (Vector3)stream.ReceiveNext();
 
             if (!appliedInitialUpdate)
             {
@@ -80,10 +82,12 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
                 GetComponentInChildren<Health>().m_health = correctHealth;
                 GetComponent<Highscore>().m_score = correctScore;
                 GetComponent<Rigidbody>().velocity = Vector3.zero;
+                GetComponentInChildren<Melee>().hitbox.transform.position = correctBoxPos;
             }
         }
     }
 
+    private Vector3 correctBoxPos = Vector3.zero; //We lerp towards this
     private Vector3 correctPlayerPos = Vector3.zero; //We lerp towards this
     private Quaternion correctPlayerRot = Quaternion.identity; //We lerp towards this
     private int correctHealth = 0;
@@ -98,6 +102,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * 5);
             GetComponentInChildren<Health>().m_health = correctHealth;
             GetComponent<Highscore>().m_score = correctScore;
+            GetComponentInChildren<Melee>().hitbox.transform.position = correctBoxPos;
         }
     }
 
