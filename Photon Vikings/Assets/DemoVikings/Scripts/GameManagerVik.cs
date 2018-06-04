@@ -130,11 +130,17 @@ public class GameManagerVik : Photon.MonoBehaviour {
                 pet.GetComponent<PetMovement>().SetPlayer(player);
                 // set health
                 player.GetComponentInChildren<Health>().PlayerHealth = Random.Range(2, 10);
+                
                 // set score
                 player.GetComponent<Highscore>().m_score = Random.Range(0,100);
-
+               
             }
         }
+
+        Debug.Log("pos : " + player.transform.position);
+        //Debug.Log("posPET : " + transform.position + new Vector3(0, 0, -1));
+        Debug.Log("health : " + player.GetComponentInChildren<Health>().PlayerHealth);
+        Debug.Log("score : " + player.GetComponentInChildren<Highscore>().m_score);
     }
 
     void StartGame()
@@ -287,17 +293,17 @@ public class GameManagerVik : Photon.MonoBehaviour {
             case 4:
                 if(content != null)
                     m_PlayerPosition = content.ToString();
-                Debug.Log("position : " + m_PlayerPosition);
+                //Debug.Log("position : " + m_PlayerPosition);
                 break;
             case 5:
                 if (content != null)
                     m_PlayerHealth = content.ToString();
-                Debug.Log("health : " + m_PlayerHealth);
+                //Debug.Log("health : " + m_PlayerHealth);
                 break;
             case 7:
                 if (content != null)
                     m_PlayerScore = content.ToString();
-                Debug.Log("Score: " + m_PlayerScore);
+                //Debug.Log("Score: " + m_PlayerScore);
                 LoadPlayer();
                 break;
         }
