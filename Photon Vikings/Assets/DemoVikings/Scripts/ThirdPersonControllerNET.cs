@@ -91,6 +91,7 @@ public class ThirdPersonControllerNET : MonoBehaviour
     // Handle rotation here to ensure smooth application.
     {
         if (isRemotePlayer) return;
+        if (Health.isDied) return;
 
         float rotationAmount;
 
@@ -147,6 +148,7 @@ public class ThirdPersonControllerNET : MonoBehaviour
     void FixedUpdate()
     // Handle movement here since physics will only be calculated in fixed frames anyway
     {
+        if (Health.isDied) return;
 
         grounded = Physics.Raycast(
             target.transform.position + target.transform.up * -groundedCheckOffset,
