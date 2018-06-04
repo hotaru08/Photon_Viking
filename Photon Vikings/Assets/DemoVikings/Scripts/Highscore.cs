@@ -68,10 +68,10 @@ public class Highscore : MonoBehaviour
         GUILayout.Label("SCORE");
         GUILayout.EndHorizontal();
 
-        foreach (var _player in PhotonNetwork.playerList)
+        foreach (var _player in GameObject.FindGameObjectsWithTag("Player"))
         {
             GUILayout.BeginHorizontal();
-            //GUILayout.Label(m_score.ToString());
+            GUILayout.Label(/*GameManagerVik.m_PlayerScore*/ _player.GetComponent<Highscore>().m_score.ToString());
             GUILayout.EndHorizontal();
         }
         GUILayout.EndArea();

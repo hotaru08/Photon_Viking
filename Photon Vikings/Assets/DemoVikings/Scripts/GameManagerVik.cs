@@ -15,7 +15,7 @@ public class GameManagerVik : Photon.MonoBehaviour {
 
     private static string m_PlayerPosition;
     private static string m_PlayerHealth;
-    private static string m_PlayerScore;
+    public static string m_PlayerScore;
     private static bool HasPet = false;
 
     void OnJoinedRoom()
@@ -138,7 +138,6 @@ public class GameManagerVik : Photon.MonoBehaviour {
         }
 
         Debug.Log("pos : " + player.transform.position);
-        //Debug.Log("posPET : " + transform.position + new Vector3(0, 0, -1));
         Debug.Log("health : " + player.GetComponentInChildren<Health>().PlayerHealth);
         Debug.Log("score : " + player.GetComponentInChildren<Highscore>().m_score);
     }
