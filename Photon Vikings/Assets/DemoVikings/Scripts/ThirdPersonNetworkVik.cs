@@ -12,6 +12,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
     private bool appliedInitialUpdate;
     Party partyScript;
     Damage dmgScript;
+    SetFriendParty setScript;
 
     void Awake()
     {
@@ -22,7 +23,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         meleeScript = GetComponentInChildren<Melee>();
         partyScript = GetComponent<Party>();
         dmgScript = GetComponent<Damage>();
-
+        setScript = GetComponent<SetFriendParty>();
     }
     void Start()
     {
@@ -37,6 +38,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             meleeScript.enabled = true;
             partyScript.enabled = true;
             dmgScript.enabled = true;
+            setScript.enabled = true;
 
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 2, -10);
@@ -51,7 +53,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             meleeScript.enabled = false;
             partyScript.enabled = false;
             dmgScript.enabled = false;
-
+            setScript.enabled = false;
         }
         controllerScript.SetIsRemotePlayer(!photonView.isMine);
 

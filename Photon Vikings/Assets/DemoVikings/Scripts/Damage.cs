@@ -32,18 +32,32 @@ public class Damage : Photon.MonoBehaviour
     {
         if (other.tag == "Hitbox" &&!isDamaged)
         {
+            GameObject player = null;
+            foreach(var _player in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                if (_player.GetComponentInChildren<PlayerName>().m_text.text == other.GetComponent<AssignPlayer>().nameofPlayer)
+                {
+                    player = _player;
+                    break;
+                }
+            }
+
             //if (photonView.isMine)
             //    return;
             //Debug.Log("CHECKING " + other.transform.parent.gameObject);
 
-            for(int i = 0; i < other.transform.parent.GetComponentInParent<Party>().members.Length; i++)
+            for (int i = 0; i < player.GetComponent<Party>().GetMembers().Length; i++)
             {
-                if (photonView.owner.NickName == other.transform.parent.GetComponentInParent<Party>().members[i])
+                if (photonView.owner.NickName == player.GetComponent<Party>().GetMembers()[i])
                     return;
             }
 
             GetComponentInChildren<Health>().m_health--;
-            other.transform.parent.parent.GetComponent<Highscore>().m_score++;
+
+            Debug.Log(player.GetComponentInChildren<PlayerName>().m_text.text);
+
+            if (player)
+                player.GetComponent<Highscore>().m_score++;
             isDamaged = true;
         }
 

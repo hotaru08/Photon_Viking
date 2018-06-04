@@ -158,7 +158,7 @@ namespace TestPlugin
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
-                
+
                 /// send back message to server
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
@@ -296,18 +296,33 @@ namespace TestPlugin
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerName = playerInfo;
 
-                sql = "SELECT GROUP_CONCAT(friend_name) FROM user_friends WHERE name='" + playerName + "'";
+                if (NameExist(playerName, 4))
+                {
+                    sql = "SELECT GROUP_CONCAT(friend_name) FROM user_friends WHERE name='" + playerName + "'";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                object Friends = cmd.ExecuteScalar();
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    object Friends = cmd.ExecuteScalar();
+                    string toreturn = playerName + " " + Friends.ToString();
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, toreturn } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
+                else
+                {
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
 
-                /// send back message to server
-                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
-                                               senderActor: 0,
-                                               targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, Friends } },
-                                               evCode: info.Request.EvCode,
-                                               cacheOp: 0);
+
             }
 
             else if (info.Request.EvCode == 9) // Add friends to vikings
@@ -336,19 +351,31 @@ namespace TestPlugin
                 string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
                 string playerName = playerInfo;
 
-                sql = "SELECT GROUP_CONCAT(party_name) FROM user_party WHERE name='" + playerName + "'";
+                if (NameExist(playerName, 5))
+                {
+                    sql = "SELECT GROUP_CONCAT(party_name) FROM user_party WHERE name='" + playerName + "'";
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                object Party = cmd.ExecuteScalar();
-                string toreturn = playerName + " " + Party.ToString();
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    object Party = cmd.ExecuteScalar();
+                    string toreturn = playerName + " " + Party.ToString();
 
-                /// send back message to server
-                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
-                                               senderActor: 0,
-                                               targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, toreturn } },
-                                               evCode: info.Request.EvCode,
-                                               cacheOp: 0);
+                    /// send back message to server
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, toreturn } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
+                else
+                {
+                    this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                                   senderActor: 0,
+                                                   targetGroup: 0,
+                                                   data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                                   evCode: info.Request.EvCode,
+                                                   cacheOp: 0);
+                }
             }
 
         }
@@ -387,6 +414,12 @@ namespace TestPlugin
                     break;
                 case 3:
                     sql = "SELECT name FROM user_position WHERE name='" + _playerName + "'";
+                    break;
+                case 4:
+                    sql = "SELECT name FROM user_friends WHERE name='" + _playerName + "'";
+                    break;
+                case 5:
+                    sql = "SELECT name FROM user_party WHERE name='" + _playerName + "'";
                     break;
             }
             

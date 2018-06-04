@@ -10,6 +10,7 @@ public class Melee : Photon.MonoBehaviour
 
     private float time;
     private bool hitboxSpawn;
+
     // Use this for initialization
     void Start ()
     {
@@ -31,6 +32,7 @@ public class Melee : Photon.MonoBehaviour
 
             hitbox = PhotonNetwork.Instantiate(meleeBox, transform.position, Quaternion.identity, 0);
             hitbox.transform.parent = transform;
+
             hitbox.transform.forward = transform.forward;
             hitboxSpawn = true;
         }
