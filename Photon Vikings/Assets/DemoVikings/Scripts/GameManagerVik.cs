@@ -224,47 +224,6 @@ public class GameManagerVik : Photon.MonoBehaviour {
         //}
         //else
         //    m_btimerStart = false;
-
-        // ------ RANK 
-        GUILayout.BeginArea(new Rect(Screen.width - 200, 0, 1000, 1000));
-
-        // board indexes
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("RANK");
-        GUILayout.EndHorizontal();
-
-        for (int i = 1; i <= 10; ++i)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(i + ".");
-            GUILayout.EndHorizontal();
-        }
-        GUILayout.EndArea();
-
-        // ------ PLAYER LIST 
-        GUILayout.BeginArea(new Rect(Screen.width - 150, 0, 1000, 1000));
-
-        // board indexes
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("PLAYER");
-        GUILayout.EndHorizontal();
-
-        foreach ( var _player in PhotonNetwork.playerList)
-        {
-            //GUILayout.BeginHorizontal();
-            //GUILayout.Label(i + ".");
-            //GUILayout.EndHorizontal();
-        }
-
-
-        //for (int i = 1; i <= 10; ++i)
-        //{
-        //    GUILayout.BeginHorizontal();
-        //    GUILayout.Label(i + ".");
-        //    GUILayout.EndHorizontal();
-        //}
-        GUILayout.EndArea();
-
     }
 
     void OnDisconnectedFromPhoton()
