@@ -35,13 +35,13 @@ public class Damage : Photon.MonoBehaviour
             //if (photonView.isMine)
             //    return;
 
-            //for(int i = 0; i < other.transform.parent.parent.GetComponent<Party>().members.Length; i++)
-            //{
-            //    if (photonView.owner.NickName == other.transform.parent.parent.GetComponent<Party>().members[i])
-            //        return;
-            //}
+            for(int i = 0; i < other.transform.parent.parent.GetComponent<Party>().members.Length; i++)
+            {
+                if (photonView.owner.NickName == other.transform.parent.parent.GetComponent<Party>().members[i])
+                    return;
+            }
 
-            GetComponentInChildren<Health>().m_health--; ;
+            GetComponentInChildren<Health>().m_health--;
             other.transform.parent.parent.GetComponent<Highscore>().m_score++;
             isDamaged = true;
         }
