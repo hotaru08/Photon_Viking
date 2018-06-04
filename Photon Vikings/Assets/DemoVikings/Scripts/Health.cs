@@ -34,21 +34,41 @@ public class Health : MonoBehaviour/*, IPunObservable*/
     }
 
     private GameObject m_player;
+    public static bool isDied;
+    private double m_timer;
     
 
 	// Use this for initialization
 	void Start ()
     {
-        //m_text.color = Color.red;
         m_maxhealth = 10;
+        m_timer = 0.0;
+        isDied = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         PrintHealth();
-
         //Debug.Log("In health : " + m_health);
+
+        if (m_health <= 0)
+        {
+            m_health = 0;
+            isDied = true;
+        }
+
+        // When died, set buffer then respawn
+        if (isDied)
+        {
+            m_timer += Time.deltaTime;
+            if (m_timer > 5.0)
+            {
+                m_health = m_maxhealth;
+                isDied = false;
+                m_timer = 0.0;
+            }
+        }
 	}
 
     // Print health
@@ -56,21 +76,4 @@ public class Health : MonoBehaviour/*, IPunObservable*/
     {
         return m_text.text = m_health + " / " + m_maxhealth;
     }
-
-    // stream - send over network
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-    //    if (stream.isWriting)
-    //    {
-    //        // We own this player: send the others our data
-    //        //stream.SendNext(IsFiring);
-    //        stream.SendNext(m_health);
-    //    }
-    //    else
-    //    {
-    //        // Network player, receive data
-    //        //this.IsFiring = (bool)stream.ReceiveNext();
-    //        this.m_health = (int)stream.ReceiveNext();
-    //    }
-    //}
 }
