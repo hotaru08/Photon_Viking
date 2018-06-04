@@ -7,26 +7,24 @@ using UnityEngine;
 public class Highscore : MonoBehaviour
 {
     public int m_score;
-    public List<GameObject> m_playerList;
 
-    // Use this for initialization
-    void Start()
+    // TODO :
+    // When kill player, increase score
+    // when die, reset to 0
+
+	// Use this for initialization
+	void Start ()
     {
-        //foreach (var _player in GameObject.FindGameObjectsWithTag("Player"))
-        //{
-        //    m_playerList.Add(_player); // add all found player into list
-        //}
-    }
+		
+	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        
-
         // sort the list of player according to score 
-        //m_playerList.Sort(CompareByScore);
-    }
-    
+        Array.Sort(PhotonNetwork.playerList);
+	}
+
     /* For printing on GUI of highscore */
     private void OnGUI()
     {
@@ -80,8 +78,8 @@ public class Highscore : MonoBehaviour
     }
 
     /* Compare score to sort */
-    public static int CompareByScore(GameObject score1, GameObject score2)
+    static int SortByScore(GameObject p1, GameObject p2)
     {
-        return score1.GetComponent<Highscore>().m_score.CompareTo(score2.GetComponent<Highscore>().m_score);
+        return p1.GetComponent<Highscore>().m_score.CompareTo(p2.GetComponent<Highscore>().m_score);
     }
 }
