@@ -291,6 +291,25 @@ namespace TestPlugin
             }
 
 
+            else if (info.Request.EvCode == 8) // Add friends to vikings
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerName = playerInfo;
+
+                sql = "SELECT GROUP_CONCAT(friend_name) FROM user_friends WHERE name='" + playerName + "'";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                object Friends = cmd.ExecuteScalar();
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, Friends } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+            }
+
         }
 
         /* Linking to SQL */

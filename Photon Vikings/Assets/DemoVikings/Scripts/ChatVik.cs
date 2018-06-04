@@ -16,6 +16,8 @@ public class ChatVik : Photon.MonoBehaviour
     private Vector2 scrollPos = Vector2.zero;
     private string chatInput = "";
     private float lastUnfocusTime = 0;
+    private string[] Friends;
+    private bool showFriend = false;
 
     void Awake()
     {
@@ -31,6 +33,14 @@ public class ChatVik : Photon.MonoBehaviour
         //Show scroll list of chat messages
         scrollPos = GUILayout.BeginScrollView(scrollPos);
         GUI.color = Color.red;
+        if (Friends != null && showFriend)
+        {
+            for (int i = 0; i < Friends.Length; i++)
+            {
+                GUILayout.Label(Friends[i]);
+            }
+        }
+
         for (int i = messages.Count - 1; i >= 0; i--)
         {
             GUILayout.Label(messages[i]);
@@ -103,6 +113,21 @@ public class ChatVik : Photon.MonoBehaviour
                     }
                 }
             }
+
+            else if (checkCommand[0] == "/List")
+            {
+                GetFriend();
+            }
+
+            else if (checkCommand[0] == "/onList")
+            {
+                showFriend = true;
+            }
+
+            else if (checkCommand[0] == "/offList")
+            {
+                showFriend = false;
+            }
             chatInput = "";
         }
     }
@@ -121,10 +146,10 @@ public class ChatVik : Photon.MonoBehaviour
     {
         this.enabled = false;
     }
-
     void OnJoinedRoom()
     {
         this.enabled = true;
+        PhotonNetwork.OnEventCall += this.OnEventHandler;
     }
     void OnCreatedRoom()
     {
@@ -138,5 +163,25 @@ public class ChatVik : Photon.MonoBehaviour
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    public void GetFriend()
+    {
+        byte evCode = 8; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    private void OnEventHandler(byte eventCode, object content, int senderId)
+    {
+        switch (eventCode)
+        {
+            case 8:
+                if (content != null)
+                    Friends = content.ToString().Split(',');
+                break;
+        }
     }
 }
