@@ -34,7 +34,7 @@ public class Damage : Photon.MonoBehaviour
             if (photonView.isMine)
                 return;
 
-            GetComponent<Health>().m_health -= 1;
+            GetComponentInChildren<Health>().m_health -= 1;
             isDamaged = true;
 
             PhotonNetwork.Destroy(other.gameObject);
