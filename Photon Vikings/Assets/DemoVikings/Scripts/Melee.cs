@@ -15,7 +15,6 @@ public class Melee : Photon.MonoBehaviour
     {
         time = 0.0f;
         hitboxSpawn = false;
-
     }
 	
 	// Update is called once per frame
@@ -29,17 +28,27 @@ public class Melee : Photon.MonoBehaviour
                 PhotonNetwork.Destroy(hitbox);
 
             hitbox = PhotonNetwork.Instantiate(meleeBox, transform.position, Quaternion.identity, 0);
+            hitbox.transform.SetParent(transform);
+            hitbox.transform.forward = transform.forward;
+
             hitboxSpawn = true;
         }
 
         if (hitboxSpawn)
             time += Time.deltaTime;
 
-        if (time > 0.5f)
+        if (time > 0.5f &&  hitbox)
         {
             PhotonNetwork.Destroy(hitbox);
             hitboxSpawn = false;
             time = 0.0f;
         }
+
+        else if (time > 0.5f && !hitbox)
+        {
+            hitboxSpawn = false;
+            time = 0.0f;
+        }
     }
+    
 }
