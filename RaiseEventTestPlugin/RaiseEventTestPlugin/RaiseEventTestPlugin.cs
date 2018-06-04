@@ -340,12 +340,13 @@ namespace TestPlugin
 
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 object Party = cmd.ExecuteScalar();
+                string toreturn = playerName + " " + Party.ToString();
 
                 /// send back message to server
                 this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
                                                senderActor: 0,
                                                targetGroup: 0,
-                                               data: new Dictionary<byte, object>() { { (byte)245, Party } },
+                                               data: new Dictionary<byte, object>() { { (byte)245, toreturn } },
                                                evCode: info.Request.EvCode,
                                                cacheOp: 0);
             }

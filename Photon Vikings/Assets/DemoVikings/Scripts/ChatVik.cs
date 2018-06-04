@@ -17,6 +17,8 @@ public class ChatVik : Photon.MonoBehaviour
     private string chatInput = "";
     private float lastUnfocusTime = 0;
     private string[] Friends;
+
+    public string[] PlayerParty;
     public string[] Party;
     private bool showFriend = false;
 
@@ -238,8 +240,9 @@ public class ChatVik : Photon.MonoBehaviour
 
             case 10:
                 if (content != null)
-                    Party = content.ToString().Split(',');
+                    PlayerParty = content.ToString().Split(' ');
 
+                Party = PlayerParty[1].Split(',');
                 break;
         }
     }

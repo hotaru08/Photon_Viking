@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Party : MonoBehaviour {
+public class Party : Photon.MonoBehaviour {
 
     public string[] members;
 	// Use this for initialization
@@ -12,6 +12,8 @@ public class Party : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        members = GameObject.FindGameObjectWithTag("Code").GetComponent<ChatVik>().Party;
+
+        if(photonView.owner.NickName == GameObject.FindGameObjectWithTag("Code").GetComponent<ChatVik>().PlayerParty[0])
+            members = GameObject.FindGameObjectWithTag("Code").GetComponent<ChatVik>().Party;
 	}
 }
