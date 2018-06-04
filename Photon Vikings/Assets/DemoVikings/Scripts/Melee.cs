@@ -20,6 +20,8 @@ public class Melee : Photon.MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        if (Health.isDied) return;
+
 		/* Checking if mouse left click is down */
         if (Input.GetMouseButtonDown(0))
         {
