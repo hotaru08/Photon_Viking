@@ -31,8 +31,8 @@ public class Damage : Photon.MonoBehaviour
     {
         if (other.tag == "Hitbox" &&!isDamaged)
         {
-            if (photonView.isMine)
-                return;
+            //if (photonView.isMine)
+            //    return;
 
             GetComponentInChildren<Health>().m_health -= 1;
             isDamaged = true;
