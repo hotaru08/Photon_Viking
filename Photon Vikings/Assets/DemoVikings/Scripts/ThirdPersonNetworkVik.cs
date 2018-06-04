@@ -6,6 +6,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
 {
     ThirdPersonCameraNET cameraScript;
     ThirdPersonControllerNET controllerScript;
+    Melee meleeScript;
     Health healthScript;
     Highscore scoreScript;
     private bool appliedInitialUpdate;
@@ -16,6 +17,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         controllerScript = GetComponent<ThirdPersonControllerNET>();
         healthScript = GetComponentInChildren<Health>();
         scoreScript = GetComponent<Highscore>();
+        meleeScript = GetComponentInChildren<Melee>();
 
     }
     void Start()
@@ -28,6 +30,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             controllerScript.enabled = true;
             healthScript.enabled = true;
             scoreScript.enabled = true;
+            meleeScript.enabled = true;
 
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 2, -10);
@@ -39,6 +42,7 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             controllerScript.enabled = true;
             healthScript.enabled = true;
             scoreScript.enabled = true;
+            meleeScript.enabled = false;
 
         }
         controllerScript.SetIsRemotePlayer(!photonView.isMine);
