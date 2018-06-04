@@ -39,6 +39,7 @@ public class PetMovement : MonoBehaviour {
         get
         {
             return grounded;
+
         }
     }
 
