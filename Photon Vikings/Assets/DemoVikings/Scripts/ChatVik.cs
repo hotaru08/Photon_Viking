@@ -17,6 +17,7 @@ public class ChatVik : Photon.MonoBehaviour
     private string chatInput = "";
     private float lastUnfocusTime = 0;
     private string[] Friends;
+    public string[] Party;
     private bool showFriend = false;
 
     void Awake()
@@ -32,7 +33,18 @@ public class ChatVik : Photon.MonoBehaviour
 
         //Show scroll list of chat messages
         scrollPos = GUILayout.BeginScrollView(scrollPos);
+        GUI.color = Color.white;
+        GUILayout.Label("PARTY");
+        if (Party != null && showFriend)
+        {
+            for (int i = 0; i < Party.Length; i++)
+            {
+                GUILayout.Label(Party[i]);
+            }
+        }
+
         GUI.color = Color.red;
+        GUILayout.Label("FRIENDS");
         if (Friends != null && showFriend)
         {
             for (int i = 0; i < Friends.Length; i++)
@@ -114,9 +126,22 @@ public class ChatVik : Photon.MonoBehaviour
                 }
             }
 
+            else if (checkCommand[0] == "/Party")
+            {
+                foreach (var player in GameObject.FindGameObjectsWithTag("Player"))
+                {
+                    if (player.GetComponentInChildren<PlayerName>().m_text.text == checkCommand[1])
+                    {
+                        DoAddParty(checkCommand[1]);
+                        DoAddParty2(checkCommand[1]);
+                    }
+                }
+            }
+
             else if (checkCommand[0] == "/List")
             {
                 GetFriend();
+                GetParty();
             }
 
             else if (checkCommand[0] == "/onList")
@@ -174,6 +199,33 @@ public class ChatVik : Photon.MonoBehaviour
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
 
+    public void DoAddParty(string FriendName)
+    {
+        byte evCode = 9; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName + "," + FriendName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    public void DoAddParty2(string FriendName)
+    {
+        byte evCode = 9; // evCode for saving position
+        string contentMessage =  FriendName + "," + PhotonNetwork.playerName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
+    public void GetParty()
+    {
+        byte evCode = 10; // evCode for saving position
+        string contentMessage = PhotonNetwork.playerName;
+        byte[] content = Encoding.UTF8.GetBytes(contentMessage);
+        bool reliable = true;
+        PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
+    }
+
     private void OnEventHandler(byte eventCode, object content, int senderId)
     {
         switch (eventCode)
@@ -181,6 +233,12 @@ public class ChatVik : Photon.MonoBehaviour
             case 8:
                 if (content != null)
                     Friends = content.ToString().Split(',');
+                break;
+
+            case 10:
+                if (content != null)
+                    Party = content.ToString().Split(',');
+
                 break;
         }
     }

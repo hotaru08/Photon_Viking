@@ -310,6 +310,46 @@ namespace TestPlugin
                                                cacheOp: 0);
             }
 
+            else if (info.Request.EvCode == 9) // Add friends to vikings
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string[] store = playerInfo.Split(',');
+                string playerName = store[0];
+                string partyName = store[1];
+
+                sql = "INSERT INTO user_party (name, party_name) VALUES ('" + playerName + "','" + partyName + "')";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, null } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+            }
+
+            else if (info.Request.EvCode == 10) // Add friends to vikings
+            {
+                string playerInfo = Encoding.Default.GetString((byte[])info.Request.Data); /// Convert from string to char array 
+                string playerName = playerInfo;
+
+                sql = "SELECT GROUP_CONCAT(party_name) FROM user_party WHERE name='" + playerName + "'";
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                object Party = cmd.ExecuteScalar();
+
+                /// send back message to server
+                this.PluginHost.BroadcastEvent(target: ReciverGroup.All,
+                                               senderActor: 0,
+                                               targetGroup: 0,
+                                               data: new Dictionary<byte, object>() { { (byte)245, Party } },
+                                               evCode: info.Request.EvCode,
+                                               cacheOp: 0);
+            }
+
         }
 
         /* Linking to SQL */
