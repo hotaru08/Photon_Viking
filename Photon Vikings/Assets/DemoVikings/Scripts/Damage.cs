@@ -34,6 +34,7 @@ public class Damage : Photon.MonoBehaviour
         {
             //if (photonView.isMine)
             //    return;
+            Debug.Log("CHECKING " + other.transform.parent.gameObject);
 
             for(int i = 0; i < other.transform.parent.GetComponentInParent<Party>().members.Length; i++)
             {
