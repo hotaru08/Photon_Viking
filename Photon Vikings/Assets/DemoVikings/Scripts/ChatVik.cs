@@ -242,7 +242,10 @@ public class ChatVik : Photon.MonoBehaviour
                 if (content != null)
                     PlayerParty = content.ToString().Split(' ');
 
-                Party = PlayerParty[1].Split(',');
+                if (PlayerParty[1].Length > 1)
+                    Party = PlayerParty[1].Split(',');
+                else
+                    Party[0] = PlayerParty[1];
                 break;
         }
     }

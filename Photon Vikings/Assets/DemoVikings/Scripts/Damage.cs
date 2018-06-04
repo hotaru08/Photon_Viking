@@ -35,9 +35,9 @@ public class Damage : Photon.MonoBehaviour
             //if (photonView.isMine)
             //    return;
 
-            for(int i = 0; i < other.transform.parent.transform.parent.GetComponent<Party>().members.Length; i++)
+            for(int i = 0; i < other.transform.parent.parent.GetComponent<Party>().members.Length; i++)
             {
-                if (photonView.owner.NickName == other.transform.parent.transform.parent.GetComponent<Party>().members[i])
+                if (photonView.owner.NickName == other.transform.parent.parent.GetComponent<Party>().members[i])
                     return;
             }
 
