@@ -4,7 +4,7 @@ using System.Text;
 using UnityEngine;
 
 /* This is for Health of Player */
-public class Health : MonoBehaviour/*, IPunObservable*/
+public class Health : Photon.MonoBehaviour/*, IPunObservable*/
 {
     [SerializeField]
     private TextMesh m_text;

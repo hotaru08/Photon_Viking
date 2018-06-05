@@ -30,17 +30,13 @@ public class SetFriendParty : Photon.MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (photonView.isMine)
-        {
-            GetFriend();
-            GetParty();
-            PhotonNetwork.OnEventCall += this.OnEventHandler;
-        }
+        //PhotonNetwork.OnEventCall += this.OnHandle;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         GetFriend();
         GetParty();
     }
@@ -142,22 +138,7 @@ public class SetFriendParty : Photon.MonoBehaviour
                     }
                 }
             }
-
-            else if (checkCommand[0] == "/List")
-            {
-                GetFriend();
-                GetParty();
-            }
-
-            else if (checkCommand[0] == "/onList")
-            {
-                showFriend = true;
-            }
-
-            else if (checkCommand[0] == "/offList")
-            {
-                showFriend = false;
-            }
+            
             chatInput = "";
         }
     }
@@ -165,7 +146,7 @@ public class SetFriendParty : Photon.MonoBehaviour
     public void DoAddFriend(string FriendName)
     {
         byte evCode = 6; // evCode for saving position
-        string contentMessage = photonView.owner.NickName + "," + FriendName;
+        string contentMessage = GetComponent<PhotonView>().owner.NickName + "," + FriendName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -174,7 +155,7 @@ public class SetFriendParty : Photon.MonoBehaviour
     public void GetFriend()
     {
         byte evCode = 8; // evCode for saving position
-        string contentMessage = photonView.owner.NickName;
+        string contentMessage = GetComponent<PhotonView>().owner.NickName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -183,7 +164,7 @@ public class SetFriendParty : Photon.MonoBehaviour
     public void DoAddParty(string FriendName)
     {
         byte evCode = 9; // evCode for saving position
-        string contentMessage = photonView.owner.NickName + "," + FriendName;
+        string contentMessage = GetComponent<PhotonView>().owner.NickName + "," + FriendName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -192,7 +173,7 @@ public class SetFriendParty : Photon.MonoBehaviour
     public void DoAddParty2(string FriendName)
     {
         byte evCode = 9; // evCode for saving position
-        string contentMessage = FriendName + "," + photonView.owner.NickName;
+        string contentMessage = FriendName + "," + GetComponent<PhotonView>().owner.NickName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
@@ -201,13 +182,13 @@ public class SetFriendParty : Photon.MonoBehaviour
     public void GetParty()
     {
         byte evCode = 10; // evCode for saving position
-        string contentMessage = photonView.owner.NickName;
+        string contentMessage = GetComponent<PhotonView>().owner.NickName;
         byte[] content = Encoding.UTF8.GetBytes(contentMessage);
         bool reliable = true;
         PhotonNetwork.RaiseEvent(evCode, content, reliable, null);
     }
 
-    private void OnEventHandler(byte eventCode, object content, int senderId)
+    private void OnHandle(byte eventCode, object content, int senderId)
     {
         switch (eventCode)
         {
@@ -219,12 +200,13 @@ public class SetFriendParty : Photon.MonoBehaviour
 
                 if (content != null)
                     PlayerFriends = content.ToString().Split(' ');
+                else break;
 
-                if (PlayerFriends.Length > 1 && PlayerFriends[0] == photonView.owner.NickName)
+                if (PlayerFriends.Length > 1 && PlayerFriends[0] == GetComponent<PhotonView>().owner.NickName)
                 {
-                    if (PlayerFriends[1].Length > 1)
+                    if (PlayerFriends[1].Length > 1) // if > 1 friend
                         Friends = PlayerFriends[1].Split(',');
-                    else if (PlayerFriends[1].Length == 1)
+                    else if (PlayerFriends[1].Length == 1) // if only 1 friend
                         Friends[0] = PlayerFriends[1];
                 }
                 break;
@@ -232,8 +214,9 @@ public class SetFriendParty : Photon.MonoBehaviour
             case 10:
                 if (content != null)
                     PlayerParty = content.ToString().Split(' ');
+                else break;
 
-                if (PlayerParty.Length > 1 && PlayerParty[0] == photonView.owner.NickName)
+                if (PlayerParty.Length > 1 && PlayerParty[0] == GetComponent<PhotonView>().owner.NickName)
                 {
                     if (PlayerParty[1].Length > 1)
                         Party = PlayerParty[1].Split(',');

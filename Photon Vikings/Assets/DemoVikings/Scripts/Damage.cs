@@ -35,26 +35,28 @@ public class Damage : Photon.MonoBehaviour
             GameObject player = null;
             foreach(var _player in GameObject.FindGameObjectsWithTag("Player"))
             {
-                if (_player.GetComponentInChildren<PlayerName>().m_text.text == other.GetComponent<AssignPlayer>().nameofPlayer)
+                if (_player.GetComponent<PhotonView>().owner.NickName == other.GetComponent<PhotonView>().owner.NickName)
                 {
                     player = _player;
                     break;
                 }
             }
+            Debug.Log(player.GetComponent<PhotonView>().owner.NickName);
 
             //if (photonView.isMine)
             //    return;
             //Debug.Log("CHECKING " + other.transform.parent.gameObject);
-
-            for (int i = 0; i < player.GetComponent<Party>().GetMembers().Length; i++)
+            if (GetComponent<SetFriendParty>().returnParty() != null)
             {
-                if (photonView.owner.NickName == player.GetComponent<Party>().GetMembers()[i])
-                    return;
+                foreach (var partyMemName in GetComponent<SetFriendParty>().returnParty())
+                {
+                    //Debug.Log(player.GetComponent<SetFriendParty>().returnParty()[i]);
+                    if (player.GetComponent<PhotonView>().owner.NickName == partyMemName)
+                        return;
+                }
             }
-
             GetComponentInChildren<Health>().m_health--;
 
-            Debug.Log(player.GetComponentInChildren<PlayerName>().m_text.text);
 
             if (player)
                 player.GetComponent<Highscore>().m_score++;

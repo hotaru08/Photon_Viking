@@ -10,7 +10,6 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
     Health healthScript;
     Highscore scoreScript;
     private bool appliedInitialUpdate;
-    Party partyScript;
     Damage dmgScript;
     SetFriendParty setScript;
 
@@ -21,7 +20,6 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
         healthScript = GetComponentInChildren<Health>();
         scoreScript = GetComponent<Highscore>();
         meleeScript = GetComponentInChildren<Melee>();
-        partyScript = GetComponent<Party>();
         dmgScript = GetComponent<Damage>();
         setScript = GetComponent<SetFriendParty>();
     }
@@ -36,7 +34,6 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             healthScript.enabled = true;
             scoreScript.enabled = true;
             meleeScript.enabled = true;
-            partyScript.enabled = true;
             dmgScript.enabled = true;
             setScript.enabled = true;
 
@@ -51,7 +48,6 @@ public class ThirdPersonNetworkVik : Photon.MonoBehaviour
             healthScript.enabled = true;
             scoreScript.enabled = true;
             meleeScript.enabled = false;
-            partyScript.enabled = false;
             dmgScript.enabled = false;
             setScript.enabled = false;
         }
