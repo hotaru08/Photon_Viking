@@ -59,12 +59,15 @@ public class Health : Photon.MonoBehaviour/*, IPunObservable*/
     {
         PrintHealth();
         // Debug.Log("In health : " + m_health);
-
-        if (m_health <= 0 && !isShielded)
+        if (GetComponentInParent<PhotonView>().isMine)
         {
-            m_health = 0;
-            isDied = true;
+            if (m_health <= 0 && !isShielded)
+            {
+                m_health = 0;
+                isDied = true;
+            }
         }
+        
 
         // When died, respawn after buffer
         if (isDied)
@@ -84,7 +87,7 @@ public class Health : Photon.MonoBehaviour/*, IPunObservable*/
         }
 
         // Activate shield 
-        if (isShielded)
+        if (isShielded && !GetComponentInParent<PhotonView>().isMine)
         {
             //create shield
             m_shield = PhotonNetwork.Instantiate(shield, transform.parent.position, Quaternion.identity, 0);
