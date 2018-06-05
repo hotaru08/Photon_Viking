@@ -30,15 +30,19 @@ public class SetFriendParty : Photon.MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //PhotonNetwork.OnEventCall += this.OnHandle;
+        GetFriend();
+        GetParty();
+        PhotonNetwork.OnEventCall += this.OnHandle;
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        GetFriend();
-        GetParty();
+        if (transform.gameObject)
+        {
+            GetFriend();
+            GetParty();
+        }
     }
 
     void Awake()
