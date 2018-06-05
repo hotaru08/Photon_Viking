@@ -58,8 +58,9 @@ public class Damage : Photon.MonoBehaviour
             GetComponentInChildren<Health>().m_health--;
 
 
-            if (player)
-                player.GetComponent<Highscore>().m_score++;
+            //if (player)
+            //    player.GetComponent<Highscore>().m_score++;
+            //other.transform.parent.parent.GetComponent<Highscore>().m_score++;
             isDamaged = true;
         }
 

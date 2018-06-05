@@ -78,8 +78,8 @@ public class Health : Photon.MonoBehaviour/*, IPunObservable*/
             {
                 transform.parent.GetComponent<Highscore>().m_score -= MINUS_SCORE_DIED;
 
-                isShielded = true;
-                isSpawned = true;
+                //isShielded = true;
+                //isSpawned = true;
                 m_health = m_maxhealth;
                 isDied = false;
                 m_timer = 0.0;

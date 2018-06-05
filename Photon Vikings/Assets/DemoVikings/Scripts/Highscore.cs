@@ -8,25 +8,41 @@ public class Highscore : Photon.MonoBehaviour
 {
     public int m_score;
 
+    private double m_ScoreTimer;
+    private bool m_isIncrease;
+
 	// Use this for initialization
 	void Start ()
     {
-        photonView.owner.SetScore(m_score);
+        m_isIncrease = false;
+        m_ScoreTimer = 0.0;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+        // set player score to be score stored in db
+        photonView.owner.SetScore(m_score);
+
         // sort the list of player according to score 
         Array.Sort(PhotonNetwork.playerList, SortByScore);
         Array.Reverse(PhotonNetwork.playerList);
 
-        Debug.Log("List: " + PhotonNetwork.playerList);
-        foreach (var _player in PhotonNetwork.playerList)
-        {
+        // increase score according to duration in room
+        if (!Health.isDied)
+            m_ScoreTimer += Time.deltaTime;
 
-            Debug.Log("SCore: " + _player.GetScore().ToString());
-            
+        if (m_ScoreTimer > 2.0)
+        {
+            m_isIncrease = true;
+            m_ScoreTimer = 0.0;
+        }
+        Debug.Log("Timer : " + m_ScoreTimer);
+
+        if (m_isIncrease)
+        {
+            m_score++;
+            m_isIncrease = false;
         }
     }
 
