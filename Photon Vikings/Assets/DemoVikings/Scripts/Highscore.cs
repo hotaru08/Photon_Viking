@@ -4,26 +4,31 @@ using System;
 using UnityEngine;
 
 /* For score of player - attached to player */
-public class Highscore : MonoBehaviour
+public class Highscore : Photon.MonoBehaviour
 {
     public int m_score;
-
-    // TODO :
-    // When kill player, increase score
-    // when die, reset to 0
 
 	// Use this for initialization
 	void Start ()
     {
-		
+        photonView.owner.SetScore(m_score);
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
         // sort the list of player according to score 
-        Array.Sort(PhotonNetwork.playerList);
-	}
+        Array.Sort(PhotonNetwork.playerList, SortByScore);
+        Array.Reverse(PhotonNetwork.playerList);
+
+        Debug.Log("List: " + PhotonNetwork.playerList);
+        foreach (var _player in PhotonNetwork.playerList)
+        {
+
+            Debug.Log("SCore: " + _player.GetScore().ToString());
+            
+        }
+    }
 
     /* For printing on GUI of highscore */
     private void OnGUI()
@@ -61,25 +66,25 @@ public class Highscore : MonoBehaviour
         GUILayout.EndArea();
 
         // ------ PLAYER SCORE 
-        GUILayout.BeginArea(new Rect(Screen.width - 90, 0, 1000, 1000));
+        GUILayout.BeginArea(new Rect(Screen.width - 50, 0, 1000, 1000));
 
         // board indexes
         GUILayout.BeginHorizontal();
         GUILayout.Label("SCORE");
         GUILayout.EndHorizontal();
 
-        foreach (var _player in GameObject.FindGameObjectsWithTag("Player"))
+        foreach (var _player in PhotonNetwork.playerList)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(_player.GetComponent<Highscore>().m_score.ToString());
+            GUILayout.Label(_player.GetScore().ToString());
             GUILayout.EndHorizontal();
         }
         GUILayout.EndArea();
     }
 
     /* Compare score to sort */
-    static int SortByScore(GameObject p1, GameObject p2)
+    static int SortByScore(PhotonPlayer p1, PhotonPlayer p2)
     {
-        return p1.GetComponent<Highscore>().m_score.CompareTo(p2.GetComponent<Highscore>().m_score);
+        return p1.GetScore().CompareTo(p2.GetScore());
     }
 }
