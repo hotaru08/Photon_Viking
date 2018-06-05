@@ -37,7 +37,7 @@ public class Highscore : Photon.MonoBehaviour
             m_isIncrease = true;
             m_ScoreTimer = 0.0;
         }
-        Debug.Log("Timer : " + m_ScoreTimer);
+        //Debug.Log("Timer : " + m_ScoreTimer);
 
         if (m_isIncrease)
         {
